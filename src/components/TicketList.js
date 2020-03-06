@@ -4,12 +4,6 @@ import { axiosWithAuth } from '../utils/axiosWithAuth';
 import TicketCard from '../components/TicketCard'
 import styled from 'styled-components';
 
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`
-
 const TicketList = ({ updateTickets }) => {
     const history = useHistory();
     const [tickets, setTickets] = useState([
@@ -44,10 +38,6 @@ const TicketList = ({ updateTickets }) => {
         });
     }
 
-    const toHome = () =>{
-        history.push("/home");
-    }
-
     useEffect(() => {
         getAllTickets();
     }, [updateTickets]);
@@ -55,12 +45,22 @@ const TicketList = ({ updateTickets }) => {
 
     return (
         <Container className="card-container">
-            <h1>Questions In The Q</h1>
             {/* <TicketCard tickets={tickets} toHome={toHome} /> */}
-            {tickets.length > 0 ? tickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} toHome={toHome} />) :
+            {tickets.length > 0 ? tickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />) :
             <div>Loading tickets...</div>}
         </Container>
     )
 }
 
 export default TicketList;
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
+    margin-left: 20%;
+    div:nth-child(1) {
+        margin-top: 40px;
+    }
+`

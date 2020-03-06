@@ -8,7 +8,7 @@ export default () => {
     return (
         <div>
             <Sidebar />
-            <CreateTicket setUpdateTickets={setUpdateTickets} />
+            {/* <CreateTicket setUpdateTickets={setUpdateTickets} /> */}
             <TicketList updateTickets={updateTickets} setUpdateTickets={setUpdateTickets} />
         </div>
     );

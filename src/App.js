@@ -2,8 +2,8 @@ import React from 'react';
 import './App.css';
 import {  Route } from "react-router-dom";
 import  PrivateRoute from './components/PrivateRoute';
-import NavBar from './components/NavBar';
-import Header from "./components/Header";
+import Navbar from './components/Navbar';
+// import Header from "./components/Header";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Dashboard from './components/Dashboard';
@@ -12,8 +12,8 @@ export default function App() {
   return (
     <div className="App">
       <div className="home-page">
-      <Header />
-      <NavBar />
+      {/* <Header /> */}
+      <Navbar />
     </div>
       <Route path='/Login' component={Login} />
       <Route path="/Register" component={Register} /> 

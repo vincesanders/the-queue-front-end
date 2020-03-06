@@ -189,6 +189,7 @@ const Container = styled.div`
         color: black;
         font-size: 2rem;
         margin-bottom: 20px;
+        text-decoration: none;
     }
     button {
         text-align: left;
@@ -197,6 +198,7 @@ const Container = styled.div`
         font-size: 1.2rem;
         background: transparent;
         border: none;
+        cursor: pointer;
         &:focus {
             outline: none;
         }
@@ -212,18 +214,30 @@ const Container = styled.div`
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        button:nth-child(1) {
+            margin-top: 10px;
+        }
         button {
-            margin: 5px 0;
+            /* margin: 5px 0; */
             font-size: 1.1rem;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
         select {
             margin-left: 38px;
             width: 67%;
             outline: none;
+            font-size: 1.1rem;
         }
         div {
             margin-top: 0;
+            button:nth-child(1) {
+                margin-top: 0;
+                padding-top: 0;
+            }
             button {
+                padding-top: 10px;
+                padding-bottom: 10px;
                 font-size: 1rem;
             }
         }
@@ -236,6 +250,7 @@ const Container = styled.div`
         select {
             width: 100%;
             margin-top: 0;
+            font-size: 1rem;
         }
         div {
             display: flex;
@@ -247,6 +262,7 @@ const Container = styled.div`
             input {
                 width: 100%;
                 margin-right: -32px;
+                font-size: 1rem;
             }
             button {
                 width: 32px;
