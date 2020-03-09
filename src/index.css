@@ -17,4 +17,50 @@ code {
 
 .modal-dialog {
   margin-left: 65% !important;
+  top: 35%;
+}
+
+.comment-container {
+  margin-left: -100px;
+}
+
+/* modal */
+.ticket-modal {
+  border-radius: 8px !important;
+}
+
+.modal-footer {
+  flex-direction: column;
+}
+
+.footer-btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.footer-btn-container button {
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+@keyframes pulse {
+	50% {
+		opacity: 0.3;
+	}
+	100% {
+		opacity: 0;
+		width: 20px;
+		height: 20px;
+	}
+}
+@keyframes pulse1 {
+	0%, 50% {
+		opacity: 0.3;
+	}
+	100% {
+		opacity: 0;
+		width: 80px;
+		height: 80px;
+	}
 }

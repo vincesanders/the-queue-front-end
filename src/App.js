@@ -12,13 +12,12 @@ export default function App() {
   return (
     <div className="App">
       <div className="home-page">
-      {/* <Header /> */}
-      <Navbar />
+      {/* <Navbar /> */}
     </div>
-      <Route path='/Login' component={Login} />
+      <Route path='/(Login|\/|)' component={Login} />
       <Route path="/Register" component={Register} /> 
       {/* If you're logged in automatically takes you to app home */}
-      <PrivateRoute exact path='/(home|protected|\/|)/' component={Dashboard} />
+      <PrivateRoute exact path='/(home|protected)/' component={Dashboard} />
     </div>
   );
 }

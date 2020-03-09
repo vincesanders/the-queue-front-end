@@ -98,9 +98,13 @@ const TicketCard = ({ ticket }) => {
             <div>
                 {ticket.asker.image ? <img  src={ticket.asker.image} alt={`${ticket.asker.username}'s profile picture`} /> : <></> }
             </div>
-            <Modal className='my-modal' isOpen={modal} toggle={toggleModal} backdrop={false} fade={false}>
-                <ModalHeader toggle={toggleModal} close={closeBtn}>{ticket.title}</ModalHeader>
+            <Modal contentClassName='ticket-modal' isOpen={modal} toggle={toggleModal} backdrop={false} fade={false}>
+                <ModalHeader toggle={toggleModal} close={closeBtn}>
+                    <h2>{ticket.category} issue</h2>
+                    {ticket.title}
+                    </ModalHeader>
                 <ModalBody>
+                    <h3>Description of issue</h3>
                     <p>{ticket.description}</p>
                 </ModalBody>
                 <ModalFooter>
@@ -113,10 +117,12 @@ const TicketCard = ({ ticket }) => {
                                 </div>
                             );
                         }) :
-                <div><p>Be the first to comment.</p></div>}
+                        <div><p>Be the first to comment.</p></div>}
                     </div>
-                    <Button color="primary" onClick={toggleModal}>Do Something</Button>{' '}
-                    <Button color="secondary" onClick={toggleModal}>Cancel</Button>
+                    <div className='footer-btn-container'>
+                        <Button color="primary" onClick={toggleModal}>Do Something</Button>{' '}
+                        <Button color="secondary" onClick={toggleModal}>Cancel</Button>
+                    </div>
                 </ModalFooter>
             </Modal>
         </Container>
@@ -131,6 +137,7 @@ const Container = styled.div`
     margin: 5px auto;
     padding: 20px 0;
     cursor: pointer;
+    border-radius: 8px;
     span {
         width: 18%;
         text-align: center;
@@ -163,6 +170,14 @@ const Container = styled.div`
             width: 40px;
             height: 40px;
             border-radius: 50%;
+        }
+    }
+    .ticket-modal {
+        border: 5px red solid !important;
+        .modal-footer {
+            div {
+                margin-left: -100px;
+            }
         }
     }
 `

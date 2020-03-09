@@ -60,7 +60,4 @@ const Container = styled.div`
     align-items: center;
     width: 45%;
     margin-left: 20%;
-    div:nth-child(1) {
-        margin-top: 40px;
-    }
 `
