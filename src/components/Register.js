@@ -1,16 +1,25 @@
 import React from "react";
 import { useHistory, Link } from 'react-router-dom';
+import * as yup from 'yup';
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { axiosWithAuth } from '../utils/axiosWithAuth';
 import styled from "styled-components";
 
+const schema = yup.object().shape({
+  first_name: yup.string().required('First name is required.'),
+  last_name: yup.string().required('Last name is required.'),
+  email: yup.string().email().required('Email is required.'),
+  username: yup.string().required('Username is required.'),
+  password: yup.string().required('Password is required.').min(8, 'Password must be at least 8 characters long.')
+})
 
 export default function Register(props) {
   const history = useHistory();
   const { register, handleSubmit, errors, formState } = useForm({
-    mode: "onChange"
+    mode: "onChange",
+    validationSchema: schema
   });
 
   const handleRegister = (data) => {
@@ -55,7 +64,7 @@ export default function Register(props) {
       <h1>We're here to help.</h1>
       <p>Create a help ticket and we'll connect you with a Lambda School Team Lead.</p>
       <div>
-        <input style={first_nameStyle} type="text" placeholder="First name" name="first_name" ref={register({required: "Error: First Name is required", maxLength: 80})} />
+        <input style={first_nameStyle} type="text" placeholder="First name" name="first_name" ref={register} />
         {errors.first_name && (
           <p className="errors">
           <FontAwesomeIcon icon={faTimesCircle} />
@@ -64,7 +73,7 @@ export default function Register(props) {
         )}
       </div>
       <div>
-        <input style={last_nameStyle} type="text" placeholder="Last name" name="last_name" ref={register({required: "Error: Last Name is required", maxLength: 100})} />
+        <input style={last_nameStyle} type="text" placeholder="Last name" name="last_name" ref={register} />
         {errors.last_name && (
           <p className="errors">
           <FontAwesomeIcon icon={faTimesCircle} />
@@ -73,7 +82,7 @@ export default function Register(props) {
         )}
       </div>
       <div>
-        <input style={emailStyle} type="text" placeholder="Email Address" name="email" ref={register({required: "Error: Email Address is required", pattern: /^\S+@\S+$/i})} />
+        <input style={emailStyle} type="text" placeholder="Email Address" name="email" ref={register} />
         {errors.email && (
           <p className="errors">
           <FontAwesomeIcon icon={faTimesCircle} />
@@ -82,7 +91,7 @@ export default function Register(props) {
         )}
       </div>
       <div>
-        <input style={usernameStyle} type="text" placeholder="Username" name="username" ref={register({required: "Error: Username is required"})} />
+        <input style={usernameStyle} type="text" placeholder="Username" name="username" ref={register} />
         {errors.username && (
           <p className="errors">
           <FontAwesomeIcon icon={faTimesCircle} />
@@ -91,7 +100,7 @@ export default function Register(props) {
         )}
       </div>
       <div>
-        <input style={passwordStyle} type="password" placeholder="Password" name="password" ref={register({required: "Error: Password is required"})} />
+        <input style={passwordStyle} type="password" placeholder="Password" name="password" ref={register} />
         {errors.password && (
           <p className="errors">
           <FontAwesomeIcon icon={faTimesCircle} />
