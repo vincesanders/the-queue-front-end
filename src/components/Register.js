@@ -133,8 +133,7 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     width: 400px;
-    padding: 17px;
-    
+    padding: 16px;
     * {
       width: 100%;
       border-radius: 8px;
@@ -142,8 +141,8 @@ const Container = styled.div`
     input {
       border: 4px solid transparent;
       background: rgba(255, 255, 255, 0.6);
-      margin-top: 17px;
-      margin-bottom: 17px;
+      margin-top: 16px;
+      margin-bottom: 16px;
       padding: 9px;
       &:focus {
         outline: none;
@@ -156,7 +155,7 @@ const Container = styled.div`
       p {
         margin: 0;
         text-align: left;
-        margin-top: -17px;
+        margin-top: -16px;
         font-size: 0.8rem;
         margin-left: 10px;
         span {
@@ -169,14 +168,14 @@ const Container = styled.div`
         padding: 9px;
         outline: none;
         border: 4px solid transparent;
-        margin-top: 17px;
+        margin-top: 16px;
         &:focus {
         outline: none;
         border-color: #47c8e8;
       }
       }
       button {
-        margin-top: 17px;
+        margin-top: 16px;
         background-color: #c717c4;
         color: #fff;
         border: none;
