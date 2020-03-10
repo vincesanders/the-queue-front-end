@@ -46,7 +46,7 @@ export default function Login(props) {
         <h1>We're here to help.</h1>
         <p>Create a help ticket and we'll connect you with a Lambda School Team Lead.</p>
         <div>
-          <input style={usernameStyle} type="text" placeholder="Username" name="username" ref={register({ required: "Error: Username is required" })} />
+          <input style={usernameStyle} type="text" placeholder="Username" name="username" ref={register({ required: "Username is required" })} />
           {errors.username && (
             <p className="errors">
               <FontAwesomeIcon icon={faTimesCircle} />
@@ -55,7 +55,7 @@ export default function Login(props) {
           )}
         </div>
         <div>
-          <input style={passwordStyle} type="password" placeholder="Password" name="password" ref={register({ required: "Error: Password is required" })} />
+          <input style={passwordStyle} type="password" placeholder="Password" name="password" ref={register({ required: "Password is required" })} />
           {errors.password && (
             <p className="errors">
               <FontAwesomeIcon icon={faTimesCircle} />
