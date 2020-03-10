@@ -1,14 +1,15 @@
 import React from "react";
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { axiosWithAuth } from '../utils/axiosWithAuth';
-// import { Button, InputGroup } from "reactstrap";
 import styled from "styled-components";
 
 
 export default function Register(props) {
   const history = useHistory();
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, errors, formState } = useForm({
+    mode: "onChange"
+  });
 
   const handleRegister = (data) => {
     axiosWithAuth()
@@ -21,83 +22,165 @@ export default function Register(props) {
     .catch(err => console.log('Post err', err));
   };
 
- 
-    return(
-      <div className="register-form">
-        <StyledSection>
-      <StyledForm onSubmit={handleSubmit(handleRegister)}>
-        <StyledH1>Register to Join DevDesk Q</StyledH1>
-        <p>Please enter your infromation below.</p>
-      <div>
-      <input type="text" placeholder="First name" name="first_name" ref={register({required: "Error: First Name is required", maxLength: 80})} />
-      {errors.first_name && (
-            <p className="errors">{errors.first_name.message}</p>
-          )}
-      </div>
-      <div>
-      <input type="text" placeholder="Last name" name="last_name" ref={register({required: "Error: Last Name is required", maxLength: 100})} />
-      {errors.last_name && (
-            <p className="errors">{errors.last_name.message}</p>
-          )}
-      </div>
-      <div>
-      <input type="text" placeholder="Email Address" name="email" ref={register({required: "Error: Email Address is required", pattern: /^\S+@\S+$/i})} />
-      {errors.email && (
-            <p className="errors">{errors.email.message}</p>
-          )}
-      </div>
-      <div>
-      <input type="text" placeholder="Username" name="username" ref={register({required: "Error: Username is required"})} />
-      {errors.username && (
-            <p className="errors">{errors.username.message}</p>
-          )}
-      </div>
-      <div>
-      <input type="password" placeholder="Password" name="password" ref={register({required: "Error: Password is required"})} />
-      {errors.password && (
-            <p className="errors">{errors.password.message}</p>
-          )}
-      </div>
-      <div>
-      <select name="role" ref={register}>
-        <option value="student">Student</option>
-        <option value="team lead"> Team Lead</option>
-        <option value="section lead"> Section Lead</option>
-      </select>
-      </div>
-      <button block type="submit" color="success">
-          Register
-        </button>
-    </StyledForm>
-    </StyledSection>
-    </div>
-
-    )
+  let first_nameStyle = {};
+  let last_nameStyle = {};
+  let emailStyle = {};
+  let usernameStyle = {};
+  let passwordStyle = {};
+  const errorBorder = {
+      borderBottomColor: '#df0d0e',
+      borderBottomWidth: 4
+  };
+  if (errors.first_name) {
+    usernameStyle = errorBorder;
+  }
+  if (errors.last_name) {
+    passwordStyle = errorBorder;
+  }
+  if (errors.email) {
+    usernameStyle = errorBorder;
+  }
+  if (errors.username) {
+    usernameStyle = errorBorder;
+  }
+  if (errors.password) {
+    passwordStyle = errorBorder;
   }
 
+  return(
+    <Container>
+    <form onSubmit={handleSubmit(handleRegister)}>
+      <h1>We're here to help.</h1>
+      <p>Create a help ticket and we'll connect you with a Lambda School Team Lead.</p>
+      <div>
+        <input type="text" placeholder="First name" name="first_name" ref={register({required: "Error: First Name is required", maxLength: 80})} />
+        {errors.first_name && (
+          <p className="errors">{errors.first_name.message}</p>
+        )}
+      </div>
+      <div>
+        <input type="text" placeholder="Last name" name="last_name" ref={register({required: "Error: Last Name is required", maxLength: 100})} />
+        {errors.last_name && (
+          <p className="errors">{errors.last_name.message}</p>
+        )}
+      </div>
+      <div>
+        <input type="text" placeholder="Email Address" name="email" ref={register({required: "Error: Email Address is required", pattern: /^\S+@\S+$/i})} />
+        {errors.email && (
+          <p className="errors">{errors.email.message}</p>
+        )}
+      </div>
+      <div>
+        <input type="text" placeholder="Username" name="username" ref={register({required: "Error: Username is required"})} />
+        {errors.username && (
+          <p className="errors">{errors.username.message}</p>
+        )}
+      </div>
+      <div>
+        <input type="password" placeholder="Password" name="password" ref={register({required: "Error: Password is required"})} />
+        {errors.password && (
+          <p className="errors">{errors.password.message}</p>
+        )}
+      </div>
+      <div>
+        <select name="role" ref={register}>
+          <option value="student">Student</option>
+          <option value="team lead"> Team Lead</option>
+          <option value="section lead"> Section Lead</option>
+        </select>
+      </div>
+      <div>
+        <button type="submit" disabled={!formState.isValid}>
+          Create Account
+        </button>
+      </div>
+    </form>
+    <div className='hr-container'>
+      <hr/>
+      or
+      <hr/>
+    </div>
+    <p>Already have an account? <Link to='/login' >Sign in.</Link></p>
+    </Container>
+  )
+}
 
-// const StyledButton = styled(Button)`
-//   background-color: #0066ff;
-//   width: 30%;
-//   margin-bottom: 10%;
-//   border-radius: 5px;
-// `;
-
-// const StyledGroup = styled(InputGroup)`
-//   margin-bottom: 2%;
-// `;
-
-
-const StyledForm = styled.form`
- 
-`;
-
-const StyledSection = styled.section`
-  width: 30%;
-  margin: auto;
-  border: 2px solid blue;
-`;
-
-const StyledH1 = styled.h1`
-color: blue;
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  form {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    padding: 17px;
+    
+    * {
+      width: 100%;
+      border-radius: 8px;
+    }
+    input {
+      border: 4px solid transparent;
+      background: rgba(255, 255, 255, 0.6);
+      margin-top: 17px;
+      margin-bottom: 17px;
+      padding: 9px;
+      &:focus {
+        outline: none;
+        border-bottom: 4px solid #47c8e8;
+      }
+    }
+    div {
+      //errors
+      font-size: 1.1rem;
+      p {
+        margin: 0;
+        text-align: left;
+        margin-top: -17px;
+        font-size: 0.8rem;
+        margin-left: 10px;
+      }
+      select {
+        padding: 9px;
+        outline: none;
+        border: 4px solid transparent;
+        margin-top: 17px;
+        &:focus {
+        outline: none;
+        border-color: #47c8e8;
+      }
+      }
+      button {
+        margin-top: 17px;
+        background-color: #c717c4;
+        color: #fff;
+        border: none;
+        outline: none;
+        padding: 9px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        transition: background-color 0.2s, color 0.2s;
+        &:hover {
+          background-color: #9400b9;
+          color: #fff;
+        }
+        &:disabled {
+          background-color: #e0e0e0;
+          color: inherit;
+          font-weight: normal;
+        }
+      }
+    }
+  }
+  .hr-container {
+    width: 400px;
+    display: flex;
+    hr {
+      width: 40%;
+      border-width: 2px;
+    }
+  }
 `

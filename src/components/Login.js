@@ -6,7 +6,9 @@ import styled from "styled-components";
 
 export default function Login(props) {
     const history = useHistory();
-    const { register, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, errors, formState } = useForm({
+      mode: "onChange"
+    });
     const [ user, setUser ] = useState({});
     console.log(errors);
   
@@ -54,7 +56,7 @@ export default function Login(props) {
           )}
         </div>
         <div>
-        <button type="submit">
+        <button type="submit" disabled={!formState.isValid}>
             Login
         </button>
         </div>
@@ -75,6 +77,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
+  height: 100vh;
   form {
     display: flex;
     flex-direction: column;
@@ -107,21 +110,27 @@ const Container = styled.div`
         margin-left: 10px;
       }
       button {
-        margin-top: 40px;
-        background-color: #e0e0e0;
+        margin-top: 17px;
+        background-color: #c717c4;
+        color: #fff;
         border: none;
         outline: none;
-        padding: 10px;
+        padding: 9px;
         font-weight: bold;
         letter-spacing: 2px;
         transition: background-color 0.2s, color 0.2s;
         &:hover {
-          background-color: #007aff;
+          background-color: #9400b9;
           color: #fff;
+        }
+        &:disabled {
+          background-color: #e0e0e0;
+          color: inherit;
+          font-weight: normal;
         }
       }
     }
-  } //form
+  }
   .hr-container {
     width: 400px;
     display: flex;
