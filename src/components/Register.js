@@ -1,6 +1,8 @@
 import React from "react";
 import { useHistory, Link } from 'react-router-dom';
 import { useForm } from "react-hook-form";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { axiosWithAuth } from '../utils/axiosWithAuth';
 import styled from "styled-components";
 
@@ -32,13 +34,13 @@ export default function Register(props) {
       borderBottomWidth: 4
   };
   if (errors.first_name) {
-    usernameStyle = errorBorder;
+    first_nameStyle = errorBorder;
   }
   if (errors.last_name) {
-    passwordStyle = errorBorder;
+    last_nameStyle = errorBorder;
   }
   if (errors.email) {
-    usernameStyle = errorBorder;
+    emailStyle = errorBorder;
   }
   if (errors.username) {
     usernameStyle = errorBorder;
@@ -53,33 +55,48 @@ export default function Register(props) {
       <h1>We're here to help.</h1>
       <p>Create a help ticket and we'll connect you with a Lambda School Team Lead.</p>
       <div>
-        <input type="text" placeholder="First name" name="first_name" ref={register({required: "Error: First Name is required", maxLength: 80})} />
+        <input style={first_nameStyle} type="text" placeholder="First name" name="first_name" ref={register({required: "Error: First Name is required", maxLength: 80})} />
         {errors.first_name && (
-          <p className="errors">{errors.first_name.message}</p>
+          <p className="errors">
+          <FontAwesomeIcon icon={faTimesCircle} />
+          <span>{errors.first_name.message}</span>
+        </p>
         )}
       </div>
       <div>
-        <input type="text" placeholder="Last name" name="last_name" ref={register({required: "Error: Last Name is required", maxLength: 100})} />
+        <input style={last_nameStyle} type="text" placeholder="Last name" name="last_name" ref={register({required: "Error: Last Name is required", maxLength: 100})} />
         {errors.last_name && (
-          <p className="errors">{errors.last_name.message}</p>
+          <p className="errors">
+          <FontAwesomeIcon icon={faTimesCircle} />
+          <span>{errors.last_name.message}</span>
+        </p>
         )}
       </div>
       <div>
-        <input type="text" placeholder="Email Address" name="email" ref={register({required: "Error: Email Address is required", pattern: /^\S+@\S+$/i})} />
+        <input style={emailStyle} type="text" placeholder="Email Address" name="email" ref={register({required: "Error: Email Address is required", pattern: /^\S+@\S+$/i})} />
         {errors.email && (
-          <p className="errors">{errors.email.message}</p>
+          <p className="errors">
+          <FontAwesomeIcon icon={faTimesCircle} />
+          <span>{errors.email.message}</span>
+        </p>
         )}
       </div>
       <div>
-        <input type="text" placeholder="Username" name="username" ref={register({required: "Error: Username is required"})} />
+        <input style={usernameStyle} type="text" placeholder="Username" name="username" ref={register({required: "Error: Username is required"})} />
         {errors.username && (
-          <p className="errors">{errors.username.message}</p>
+          <p className="errors">
+          <FontAwesomeIcon icon={faTimesCircle} />
+          <span>{errors.username.message}</span>
+        </p>
         )}
       </div>
       <div>
-        <input type="password" placeholder="Password" name="password" ref={register({required: "Error: Password is required"})} />
+        <input style={passwordStyle} type="password" placeholder="Password" name="password" ref={register({required: "Error: Password is required"})} />
         {errors.password && (
-          <p className="errors">{errors.password.message}</p>
+          <p className="errors">
+          <FontAwesomeIcon icon={faTimesCircle} />
+          <span>{errors.password.message}</span>
+        </p>
         )}
       </div>
       <div>
@@ -142,6 +159,11 @@ const Container = styled.div`
         margin-top: -17px;
         font-size: 0.8rem;
         margin-left: 10px;
+        span {
+          margin-left: 16px;
+          font-weight: normal;
+          color: #656378;
+        }
       }
       select {
         padding: 9px;

@@ -6,7 +6,7 @@
 .errors {
   color: red;
   font-weight: bold;
-  }
+}
 
 .ticket-card {
   display: flex;

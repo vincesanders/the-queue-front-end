@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { axiosWithAuth } from '../utils/axiosWithAuth';
 import { useForm } from "react-hook-form";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import styled from "styled-components";
 
 export default function Login(props) {
@@ -46,13 +48,19 @@ export default function Login(props) {
         <div>
           <input style={usernameStyle} type="text" placeholder="Username" name="username" ref={register({ required: "Error: Username is required" })} />
           {errors.username && (
-            <p className="errors">{errors.username.message}</p>
+            <p className="errors">
+              <FontAwesomeIcon icon={faTimesCircle} />
+              <span>{errors.username.message}</span>
+            </p>
           )}
         </div>
         <div>
           <input style={passwordStyle} type="password" placeholder="Password" name="password" ref={register({ required: "Error: Password is required" })} />
           {errors.password && (
-            <p className="errors">{errors.password.message}</p>
+            <p className="errors">
+              <FontAwesomeIcon icon={faTimesCircle} />
+              <span>{errors.password.message}</span>
+            </p>
           )}
         </div>
         <div>
@@ -108,6 +116,11 @@ const Container = styled.div`
         margin-top: -20px;
         font-size: 0.8rem;
         margin-left: 10px;
+        span {
+          margin-left: 16px;
+          font-weight: normal;
+          color: #656378;
+        }
       }
       button {
         margin-top: 17px;
