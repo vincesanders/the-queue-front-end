@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
-import { axiosWithAuth } from "../utils/axiosWithAuth";
+import axiosWithAuth from "../utils/axiosWithAuth";
 
 export default ({ updateTickets, setUpdateTickets }) => {
   const history = useHistory();

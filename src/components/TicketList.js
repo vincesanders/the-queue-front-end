@@ -1,51 +1,31 @@
 import React, {useState, useEffect} from 'react'
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllTicketsByNewest } from '../state/actions/actions';
 import { axiosWithAuth } from '../utils/axiosWithAuth';
 import TicketCard from '../components/TicketCard'
 import styled from 'styled-components';
 
 const TicketList = ({ updateTickets }) => {
     const history = useHistory();
-    const [tickets, setTickets] = useState([
-    // {
-        // id: "",
-        // asker_id: "",
-        // created_at: "",
-        // title: "",
-        // description: "",
-        // category: "",
-        // resolved: "",
-        // being_solved: "",
-        // solved_by: "",
-        // assignee: "",
-        // assigned_by: ""
-    // }
-    ]);
+    const dispatch = useDispatch();
+    const tickets = useSelector(state => state.tickets);
+    const errors = useSelector(state => state.errors);
 
-    const getAllTickets = (id) =>{
-        axiosWithAuth()
-        .get(`api/tickets/all/newest`)
-        .then(res => {
-            const ticketData = res.data;
-            setTickets(ticketData);
-        })
-        .catch(err => {
-            console.log('Error', err.respond);
-            //If unable to load initial tickets, it's likely due to
-            //an expired token. We need to route the user back to login
-            //when their token expires.
-            history.push('/login');
-        });
-    }
-
+    //on the first render
     useEffect(() => {
-        getAllTickets();
-    }, [updateTickets]);
+        dispatch(getAllTicketsByNewest());
+    });
 
+    if (errors.length > 0) {
+        //If unable to load tickets, it's likely due to
+        //an expired token. We need to route the user back to login
+        //when their token expires.
+        history.push('/login');
+    }
 
     return (
         <Container className="card-container">
-            {/* <TicketCard tickets={tickets} toHome={toHome} /> */}
             {tickets.length > 0 ? tickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />) :
             <div>Loading tickets...</div>}
         </Container>
