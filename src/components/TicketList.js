@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllTicketsByNewest } from '../state/actions/actions';
-import { axiosWithAuth } from '../utils/axiosWithAuth';
-import TicketCard from '../components/TicketCard'
+import TicketCard from '../components/TicketCard';
 import styled from 'styled-components';
 
 const TicketList = ({ updateTickets }) => {
@@ -15,7 +14,7 @@ const TicketList = ({ updateTickets }) => {
     //on the first render
     useEffect(() => {
         dispatch(getAllTicketsByNewest());
-    });
+    },[]);
 
     if (errors.length > 0) {
         //If unable to load tickets, it's likely due to

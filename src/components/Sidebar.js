@@ -1,10 +1,22 @@
 import React, { useState, useRef } from 'react';
 import { NavLink } from "react-router-dom";
+import { useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { 
+    getAllTicketsByNewest, 
+    getMyTickets, 
+    getOpenTickets, 
+    getClosedTickets, 
+    getTicketsFilteredByCategory, 
+    searchTickets,
+    sortTicketsNewest,
+    sortTicketsOldest
+    } from '../state/actions/actions';
 import { faChevronRight, faChevronDown, faSearch } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components';
 
 export default () => {
+    const dispatch = useDispatch();
     const filterDiv = useRef(null);
     const statusDiv = useRef(null);
     const sortDiv = useRef(null);
@@ -12,6 +24,10 @@ export default () => {
     const myTicketsBtn = useRef(null);
     const filterTicketsBtn = useRef(null);
     const sortTicketsBtn = useRef(null);
+    const openTicketsBtn = useRef(null);
+    const closedTicketsBtn = useRef(null);
+    const newestTicketsBtn = useRef(null);
+    const oldestTicketsBtn = useRef(null);
     const [isFilterDivCollapsed, setIsFilterDivCollapsed] = useState(true);
     const [isStatusDivCollapsed, setIsStatusDivCollapsed] = useState(true);
     const [isSortDivCollapsed, setIsSortDivCollapsed] = useState(true);
@@ -33,10 +49,35 @@ export default () => {
             collapseDiv(element);
         }
         if (button) {
-            button.current.classList.add('selected');
-            removeSelectedClass(button);
-            if (button === allTicketsBtn || button === myTicketsBtn) {
-                collapseAllDivs();
+            if (button !== newestTicketsBtn && button !== oldestTicketsBtn) {
+                button.current.classList.add('selected');
+                removeSelectedClass(button);
+                if (button === allTicketsBtn || button === myTicketsBtn) {
+                    collapseAllDivs();
+                }
+            }
+            //dispatches will go here
+            switch (button) {
+                case allTicketsBtn:
+                    dispatch(getAllTicketsByNewest());
+                    break;
+                case myTicketsBtn:
+                    dispatch(getMyTickets());
+                    break;
+                case openTicketsBtn:
+                    dispatch(getOpenTickets());
+                    break;
+                case closedTicketsBtn:
+                    dispatch(getClosedTickets());
+                    break;
+                case newestTicketsBtn:
+                    dispatch(sortTicketsNewest());
+                    break;
+                case oldestTicketsBtn:
+                    dispatch(sortTicketsOldest());
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -122,6 +163,16 @@ export default () => {
         }
     }
 
+    const handleCategoryChange = e => {
+        //dispatch
+        dispatch(getTicketsFilteredByCategory());
+    }
+
+    const handleSearchChange = e => {
+        //dispatch
+        dispatch(searchTickets());
+    }
+
     return (
         <Container>
             <NavLink to='/protected' >The Queue</NavLink>
@@ -135,10 +186,10 @@ export default () => {
                     {displayChevron(isStatusDivCollapsed)} Status
                 </button>
                 <div ref={statusDiv} style={{display: 'none'}} >
-                    <button>Open</button>
-                    <button>Closed</button>
+                    <button ref={openTicketsBtn}>Open</button>
+                    <button ref={closedTicketsBtn}>Closed</button>
                 </div>
-                <select name='category' defaultValue='category'>
+                <select onChange={handleCategoryChange} name='category' defaultValue='category'>
                     <option disabled value='category' >Category</option>
                     {populateCategories()}
                 </select>
@@ -147,16 +198,18 @@ export default () => {
                 {displayChevron(isSortDivCollapsed)} Sort Tickets
             </button>
             <div ref={sortDiv} style={{display: 'none'}} >
-                <button>Newest</button>
-                <button>Oldest</button>
+                <button ref={newestTicketsBtn} onClick={() => handleButtonClick(undefined, newestTicketsBtn)}>Newest</button>
+                <button ref={oldestTicketsBtn} onClick={() => handleButtonClick(undefined, oldestTicketsBtn)}>Oldest</button>
             </div>
             <form>
                 <div>
                     <input type="text" placeholder="Search.." name="search" />
-                    <button type="submit"><FontAwesomeIcon icon={faSearch} /></button>
+                    <button type="submit">
+                        <FontAwesomeIcon icon={faSearch} />
+                    </button>
                 </div>
                 
-                <select name='search-option' defaultValue='search-by'>
+                <select onChange={handleSearchChange} name='search-option' defaultValue='search-by'>
                     <option disabled value='search-by' >Search by...</option>
                     <option value='title'>Title</option>
                     <option value='description'>Description</option>
