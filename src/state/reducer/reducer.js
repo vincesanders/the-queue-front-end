@@ -3,6 +3,8 @@ import {
     ADD_ERROR, 
     SORT_TICKETS_NEWEST, 
     SORT_TICKETS_OLDEST, 
+    FILTER_OPEN_TICKETS,
+    FILTER_CLOSED_TICKETS,
     SET_USER_ID } from '../actions/actions';
 
 const initialState = {
@@ -37,6 +39,21 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 tickets: [
                     ...state.tickets.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+                ]
+            };
+        case FILTER_OPEN_TICKETS:
+            return {
+                ...state,
+                tickets: [
+                    ...state.tickets.filter(ticket => (ticket.resolved === false && ticket.being_solved === false))
+                ]
+            };
+        case FILTER_CLOSED_TICKETS:
+            console.log(state.tickets);
+            return {
+                ...state,
+                tickets: [
+                    ...state.tickets.filter(ticket => ticket.resolved)
                 ]
             };
         case ADD_ERROR:

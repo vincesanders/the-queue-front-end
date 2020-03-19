@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { 
-    getAllTicketsByNewest, 
+    getAllTickets, 
     getMyTickets, 
     getOpenTickets, 
     getClosedTickets, 
@@ -59,7 +59,7 @@ export default () => {
             collapseDiv(element);
         }
         if (button) {
-            if (button !== newestTicketsBtn && button !== oldestTicketsBtn) {
+            if (button !== newestTicketsBtn && button !== oldestTicketsBtn && button !== openTicketsBtn && button !== closedTicketsBtn) {
                 button.current.classList.add('selected');
                 removeSelectedClass(button);
                 if (button === allTicketsBtn || button === myTicketsBtn) {
@@ -69,7 +69,7 @@ export default () => {
             //dispatches will go here
             switch (button) {
                 case allTicketsBtn:
-                    dispatch(getAllTicketsByNewest());
+                    dispatch(getAllTickets());
                     break;
                 case myTicketsBtn:
                     dispatch(getMyTickets(userId));
@@ -196,8 +196,8 @@ export default () => {
                     {displayChevron(isStatusDivCollapsed)} Status
                 </button>
                 <div ref={statusDiv} style={{display: 'none'}} >
-                    <button ref={openTicketsBtn}>Open</button>
-                    <button ref={closedTicketsBtn}>Closed</button>
+                    <button ref={openTicketsBtn} onClick={() => handleButtonClick(undefined, openTicketsBtn)}>Open</button>
+                    <button ref={closedTicketsBtn} onClick={() => handleButtonClick(undefined, closedTicketsBtn)}>Closed</button>
                 </div>
                 <select onChange={handleCategoryChange} name='category' defaultValue='category'>
                     <option disabled value='category' >Category</option>

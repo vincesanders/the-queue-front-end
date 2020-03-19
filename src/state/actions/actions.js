@@ -14,6 +14,8 @@ export const SET_USER_ID = "SET_USER_ID";
 export const UPDATE_TICKETS = "UPDATE_TICKETS";
 export const SORT_TICKETS_NEWEST = "SORT_TICKETS_NEWEST";
 export const SORT_TICKETS_OLDEST = "SORT_TICKETS_OLDEST";
+export const FILTER_OPEN_TICKETS = "FILTER_OPEN_TICKETS";
+export const FILTER_CLOSED_TICKETS = "FILTER_CLOSED_TICKETS";
 export const ADD_ERROR = "ADD_ERROR";
 
 export const setUserId = (id) => dispatch => {
@@ -23,6 +25,18 @@ export const setUserId = (id) => dispatch => {
 export const getAllTicketsByNewest = () => dispatch => {
     axiosWithAuth()
     .get(`api/tickets/all/newest`)
+    .then(res => {
+        dispatch({ type: UPDATE_TICKETS, payload: res.data });
+    })
+    .catch(err => {
+        console.log('Error', err.respond);
+        dispatch({ type: ADD_ERROR, payload: err });
+    });
+}
+
+export const getAllTickets = () => dispatch => {
+    axiosWithAuth()
+    .get(`api/tickets`)
     .then(res => {
         dispatch({ type: UPDATE_TICKETS, payload: res.data });
     })
@@ -46,11 +60,11 @@ export const getMyTickets = (userId) => dispatch => {
 }
 
 export const getOpenTickets = () => dispatch => {
-
+    dispatch({ type: FILTER_OPEN_TICKETS });
 }
 
 export const getClosedTickets = () => dispatch => {
-
+    dispatch({ type: FILTER_CLOSED_TICKETS });
 }
 
 export const getTicketsFilteredByCategory = () => dispatch => {
