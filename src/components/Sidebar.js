@@ -228,6 +228,14 @@ const Container = styled.div`
             width: 67%;
             outline: none;
             font-size: 1.1rem;
+            background: #f7f7f7;
+            padding: 6px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            &:focus {
+                border-color: #e627ff;
+                outline: none;
+            }
         }
         div {
             margin-top: 0;
@@ -247,10 +255,19 @@ const Container = styled.div`
         flex-direction: column;
         align-items: flex-start;
         padding-left: 38px;
+        width: 82%;
         select {
             width: 100%;
             margin-top: 0;
             font-size: 1rem;
+            background: #f7f7f7;
+            padding: 6px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            &:focus {
+                border-color: #e627ff;
+                outline: none;
+            }
         }
         div {
             display: flex;
@@ -263,14 +280,27 @@ const Container = styled.div`
                 width: 100%;
                 margin-right: -32px;
                 font-size: 1rem;
+                padding: 6px;
+                border-radius: 8px;
+                border: 4px solid rgba(255, 255, 255, 0.3);
+                background-color: #e0e0e0;
+                &:focus {
+                    outline: none;
+                    border: 4px solid #c717c4;
+                }
             }
             button {
                 width: 32px;
                 text-align: center;
                 margin: 0;
                 padding: 0;
-                color: lightgray;
                 vertical-align: middle;
+                border: none;
+                outline: none;
+                background-color: transparent;
+                color: rgba(199, 23, 196, 0.4);
+                vertical-align: middle;
+                font-size: 20px;
             }
         }
     }
