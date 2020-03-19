@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUserId } from '../state/actions/actions';
 import axiosWithAuth from '../utils/axiosWithAuth';
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,6 +10,7 @@ import styled from "styled-components";
 
 export default function Login(props) {
     const history = useHistory();
+    const dispatch = useDispatch();
     const { register, handleSubmit, errors, formState } = useForm({
       mode: "onChange"
     });
@@ -21,6 +24,7 @@ export default function Login(props) {
             .then(res => {
               setUser(res.data.user);
               localStorage.setItem('user', res.data.user.id);
+              dispatch(setUserId(res.data.user.id));
               localStorage.setItem('token', res.data.token);
               history.push('/protected');
             })

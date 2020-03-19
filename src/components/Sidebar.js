@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { NavLink } from "react-router-dom";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { 
     getAllTicketsByNewest, 
@@ -31,6 +31,16 @@ export default () => {
     const [isFilterDivCollapsed, setIsFilterDivCollapsed] = useState(true);
     const [isStatusDivCollapsed, setIsStatusDivCollapsed] = useState(true);
     const [isSortDivCollapsed, setIsSortDivCollapsed] = useState(true);
+    const userId = useSelector(state => {
+        if (state.userId > 0) {
+            return state.userId;
+        } else if (localStorage.getItem('user')) {
+            return localStorage.getItem('user');
+        } else {
+            return 0;
+        }
+        
+    });
     const catgories = [
         'HTML', 'CSS', 'JavaScipt', 'React', 'Redux', 'Git', 'Node', 'Testing', 'Python', 'Java', 'SQL'
     ];
@@ -62,7 +72,7 @@ export default () => {
                     dispatch(getAllTicketsByNewest());
                     break;
                 case myTicketsBtn:
-                    dispatch(getMyTickets());
+                    dispatch(getMyTickets(userId));
                     break;
                 case openTicketsBtn:
                     dispatch(getOpenTickets());

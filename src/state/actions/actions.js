@@ -10,11 +10,15 @@ import axiosWithAuth from '../../utils/axiosWithAuth';
  * Add a comment to a ticket
  * submit a ticket
  */
-
+export const SET_USER_ID = "SET_USER_ID";
 export const UPDATE_TICKETS = "UPDATE_TICKETS";
 export const SORT_TICKETS_NEWEST = "SORT_TICKETS_NEWEST";
 export const SORT_TICKETS_OLDEST = "SORT_TICKETS_OLDEST";
 export const ADD_ERROR = "ADD_ERROR";
+
+export const setUserId = (id) => dispatch => {
+    dispatch({ type: SET_USER_ID, payload: id });
+}
 
 export const getAllTicketsByNewest = () => dispatch => {
     axiosWithAuth()
@@ -28,8 +32,17 @@ export const getAllTicketsByNewest = () => dispatch => {
     });
 }
 
-export const getMyTickets = () => dispatch => {
-
+//Gets tickets CREATED BY the user
+export const getMyTickets = (userId) => dispatch => {
+    axiosWithAuth()
+    .get(`/api/users/asker/${userId}/tickets`)
+    .then(res => {
+        dispatch({ type: UPDATE_TICKETS, payload: res.data });
+    })
+    .catch(err => {
+        console.log('Error', err.respond);
+        dispatch({ type: ADD_ERROR, payload: err });
+    });
 }
 
 export const getOpenTickets = () => dispatch => {
@@ -49,11 +62,9 @@ export const searchTickets = () => dispatch => {
 }
 
 export const sortTicketsNewest = () => dispatch => {
-    console.log('sortTicketsNewest called')
     dispatch({ type: SORT_TICKETS_NEWEST });
 }
 
 export const sortTicketsOldest = () => dispatch => {
     dispatch({ type: SORT_TICKETS_OLDEST });
-    console.log('sortTicketsOldest called')
 }

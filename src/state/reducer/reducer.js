@@ -1,12 +1,23 @@
-import { UPDATE_TICKETS, ADD_ERROR, SORT_TICKETS_NEWEST, SORT_TICKETS_OLDEST } from '../actions/actions';
+import { 
+    UPDATE_TICKETS, 
+    ADD_ERROR, 
+    SORT_TICKETS_NEWEST, 
+    SORT_TICKETS_OLDEST, 
+    SET_USER_ID } from '../actions/actions';
 
 const initialState = {
+    userId: 0,
     tickets: [],
     errors: []
 }
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case SET_USER_ID:
+            return {
+                ...state,
+                userId: action.payload
+            }
         case UPDATE_TICKETS:
             //payload is all tickets that will be displayed on ticket list.
             return {
@@ -15,7 +26,6 @@ const reducer = (state = initialState, action) => {
                 errors: []
             };
         case SORT_TICKETS_NEWEST:
-            console.log('SORT_TICKETS_NEWEST reducer switch case');
             return {
                 ...state,
                 tickets: [
@@ -23,7 +33,6 @@ const reducer = (state = initialState, action) => {
                 ]
             };
         case SORT_TICKETS_OLDEST:
-            console.log('SORT_TICKETS_OLDEST reducer switch case');
             return {
                 ...state,
                 tickets: [
