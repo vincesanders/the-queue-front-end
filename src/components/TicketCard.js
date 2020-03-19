@@ -1,7 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
-// import { CardTitle, CardText } from 'reactstrap';
 import styled from "styled-components";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGreaterThan } from '@fortawesome/free-solid-svg-icons'
 
 const TicketCard = ({ ticket }) => {
     const containerDiv = useRef(null);
@@ -98,7 +99,7 @@ const TicketCard = ({ ticket }) => {
             <div>
                 {ticket.asker.image ? <img  src={ticket.asker.image} alt={`${ticket.asker.username}'s profile picture`} /> : <></> }
             </div>
-            <Modal contentClassName='ticket-modal' isOpen={modal} toggle={toggleModal} backdrop={false} fade={false}>
+            <Modal contentClassName='ticket-modal' isOpen={modal} toggle={toggleModal} backdrop={true} fade={false}>
                 <ModalHeader toggle={toggleModal} close={closeBtn}>
                     <h2>{ticket.category} issue</h2>
                     {ticket.title}
@@ -108,16 +109,26 @@ const TicketCard = ({ ticket }) => {
                     <p>{ticket.description}</p>
                 </ModalBody>
                 <ModalFooter>
-                    <div>
+                    <div className='comment-container'>
                         <h4>Comments:</h4>
                         {ticket.comments.length > 0 ? ticket.comments.map(comment => {
                             return (
                                 <div key={comment.id} >
-                                    <p><span>{comment.first_name} {comment.last_name}: </span>{comment.comment}</p>
+                                    {comment.image ? <img  src={comment.image} alt={`${comment.username}'s profile picture`} /> : <></> }
+                                    <div>
+                                        <p className='commenter-name'>
+                                            {comment.first_name} {comment.last_name}
+                                        </p>
+                                        <p>{comment.comment}</p>
+                                    </div>
                                 </div>
                             );
                         }) :
                         <div><p>Be the first to comment.</p></div>}
+                        <form>
+                            <input placeholder='comment...' />
+                            <button type="submit"><FontAwesomeIcon icon={faGreaterThan} /></button>
+                        </form>
                     </div>
                     <div className='footer-btn-container'>
                         <Button color="primary" onClick={toggleModal}>Do Something</Button>{' '}
