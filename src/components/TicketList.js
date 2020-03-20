@@ -20,7 +20,7 @@ const TicketList = ({ updateTickets }) => {
         //If unable to load tickets, it's likely due to
         //an expired token. We need to route the user back to login
         //when their token expires.
-        history.push('/login');
+        // history.push('/login');
     }
 
     return (

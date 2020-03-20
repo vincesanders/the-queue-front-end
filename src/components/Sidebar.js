@@ -28,9 +28,11 @@ export default () => {
     const closedTicketsBtn = useRef(null);
     const newestTicketsBtn = useRef(null);
     const oldestTicketsBtn = useRef(null);
+    const searchBySelect = useRef(null);
     const [isFilterDivCollapsed, setIsFilterDivCollapsed] = useState(true);
     const [isStatusDivCollapsed, setIsStatusDivCollapsed] = useState(true);
     const [isSortDivCollapsed, setIsSortDivCollapsed] = useState(true);
+    const [searchValue, setSearchValue] = useState('');
     const userId = useSelector(state => {
         if (state.userId > 0) {
             return state.userId;
@@ -179,9 +181,24 @@ export default () => {
         e.target.value = 'category'
     }
 
+    const handleSearchInputChange = e => {
+        setSearchValue(e.target.value);
+    }
+
     const handleSearchChange = e => {
-        //dispatch
-        dispatch(searchTickets());
+        if (searchValue.trim() !== '') {
+            dispatch(searchTickets(searchValue, e.target.value));
+        }
+    }
+
+    const handleSearchSubmit = e => {
+        e.preventDefault();
+        //if something has been typed in the search input &
+        //if a category has been chosen
+        if (searchValue.trim() !== '' && 
+        (searchBySelect.current.value === 'title' || searchBySelect.current.value === 'description')) {
+            dispatch(searchTickets(searchValue, searchBySelect.current.value));
+        }
     }
 
     return (
@@ -212,15 +229,15 @@ export default () => {
                 <button ref={newestTicketsBtn} onClick={() => handleButtonClick(undefined, newestTicketsBtn)}>Newest</button>
                 <button ref={oldestTicketsBtn} onClick={() => handleButtonClick(undefined, oldestTicketsBtn)}>Oldest</button>
             </div>
-            <form>
+            <form onSubmit={handleSearchSubmit}>
                 <div>
-                    <input type="text" placeholder="Search.." name="search" />
+                    <input type="text" placeholder="Search.." name="search" value={searchValue} onChange={handleSearchInputChange} />
                     <button type="submit">
                         <FontAwesomeIcon icon={faSearch} />
                     </button>
                 </div>
                 
-                <select onChange={handleSearchChange} name='search-option' defaultValue='search-by'>
+                <select ref={searchBySelect} onChange={handleSearchChange} name='search-option' defaultValue='search-by'>
                     <option disabled value='search-by' >Search by...</option>
                     <option value='title'>Title</option>
                     <option value='description'>Description</option>
@@ -336,7 +353,7 @@ const Container = styled.div`
         div {
             display: flex;
             flex-direction: row;
-            margin-top: 0;
+            margin-top: 20px;
             margin-left: 0;
             margin-bottom: -2px;
             align-items: center;

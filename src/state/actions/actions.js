@@ -96,8 +96,16 @@ export const getTicketsFilteredByCategory = category => dispatch => {
     });
 }
 
-export const searchTickets = () => dispatch => {
-
+export const searchTickets = (searchValue, searchByOption) => dispatch => {
+    axiosWithAuth()
+    .post(`api/tickets/getby/filter`, { [searchByOption]: searchValue })
+    .then(res => {
+        dispatch({ type: UPDATE_TICKETS, payload: res.data });
+    })
+    .catch(err => {
+        console.log('Error', err.respond);
+        dispatch({ type: ADD_ERROR, payload: err });
+    });
 }
 
 export const sortTicketsNewest = () => dispatch => {
