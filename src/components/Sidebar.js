@@ -42,7 +42,7 @@ export default () => {
         
     });
     const catgories = [
-        'HTML', 'CSS', 'JavaScipt', 'React', 'Redux', 'Git', 'Node', 'Testing', 'Python', 'Java', 'SQL'
+        'HTML', 'CSS', 'JavaScript', 'React', 'Redux', 'Git', 'Node', 'Testing', 'Python', 'Java', 'SQL'
     ];
     const buttons = [allTicketsBtn, myTicketsBtn, filterTicketsBtn, sortTicketsBtn];
     const collapsibleDivs = [filterDiv, statusDiv, sortDiv];
@@ -175,7 +175,8 @@ export default () => {
 
     const handleCategoryChange = e => {
         //dispatch
-        dispatch(getTicketsFilteredByCategory());
+        dispatch(getTicketsFilteredByCategory(e.target.value));
+        e.target.value = 'category'
     }
 
     const handleSearchChange = e => {

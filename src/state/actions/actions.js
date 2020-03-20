@@ -16,9 +16,10 @@ export const SORT_TICKETS_NEWEST = "SORT_TICKETS_NEWEST";
 export const SORT_TICKETS_OLDEST = "SORT_TICKETS_OLDEST";
 export const FILTER_OPEN_TICKETS = "FILTER_OPEN_TICKETS";
 export const FILTER_CLOSED_TICKETS = "FILTER_CLOSED_TICKETS";
+export const FILTER_TICKETS_CATEGORY = "FILTER_TICKETS_CATEGORY";
 export const ADD_ERROR = "ADD_ERROR";
 
-export const setUserId = (id) => dispatch => {
+export const setUserId = id => dispatch => {
     dispatch({ type: SET_USER_ID, payload: id });
 }
 
@@ -47,7 +48,7 @@ export const getAllTickets = () => dispatch => {
 }
 
 //Gets tickets CREATED BY the user
-export const getMyTickets = (userId) => dispatch => {
+export const getMyTickets = userId => dispatch => {
     axiosWithAuth()
     .get(`/api/users/asker/${userId}/tickets`)
     .then(res => {
@@ -60,15 +61,39 @@ export const getMyTickets = (userId) => dispatch => {
 }
 
 export const getOpenTickets = () => dispatch => {
-    dispatch({ type: FILTER_OPEN_TICKETS });
+    axiosWithAuth()
+    .get(`api/tickets/all/newest`)
+    .then(res => {
+        dispatch({ type: FILTER_OPEN_TICKETS, payload: res.data });
+    })
+    .catch(err => {
+        console.log('Error', err.respond);
+        dispatch({ type: ADD_ERROR, payload: err });
+    });
 }
 
 export const getClosedTickets = () => dispatch => {
-    dispatch({ type: FILTER_CLOSED_TICKETS });
+    axiosWithAuth()
+    .get(`api/tickets/all/newest`)
+    .then(res => {
+        dispatch({ type: FILTER_CLOSED_TICKETS, payload: res.data });
+    })
+    .catch(err => {
+        console.log('Error', err.respond);
+        dispatch({ type: ADD_ERROR, payload: err });
+    });
 }
 
-export const getTicketsFilteredByCategory = () => dispatch => {
-
+export const getTicketsFilteredByCategory = category => dispatch => {
+    axiosWithAuth()
+    .get(`api/tickets/all/newest`)
+    .then(res => {
+        dispatch({ type: FILTER_TICKETS_CATEGORY, payload: { tickets: res.data, category: category} });
+    })
+    .catch(err => {
+        console.log('Error', err.respond);
+        dispatch({ type: ADD_ERROR, payload: err });
+    });
 }
 
 export const searchTickets = () => dispatch => {

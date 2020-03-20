@@ -5,6 +5,7 @@ import {
     SORT_TICKETS_OLDEST, 
     FILTER_OPEN_TICKETS,
     FILTER_CLOSED_TICKETS,
+    FILTER_TICKETS_CATEGORY,
     SET_USER_ID } from '../actions/actions';
 
 const initialState = {
@@ -45,17 +46,23 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 tickets: [
-                    ...state.tickets.filter(ticket => (ticket.resolved === false && ticket.being_solved === false))
+                    ...action.payload.filter(ticket => (ticket.resolved === false && ticket.being_solved === false))
                 ]
             };
         case FILTER_CLOSED_TICKETS:
-            console.log(state.tickets);
             return {
                 ...state,
                 tickets: [
-                    ...state.tickets.filter(ticket => ticket.resolved)
+                    ...action.payload.filter(ticket => ticket.resolved)
                 ]
             };
+        case FILTER_TICKETS_CATEGORY:
+            return {
+                ...state,
+                tickets: [
+                    ...action.payload.tickets.filter(ticket => ticket.category === action.payload.category)
+                ]
+            }
         case ADD_ERROR:
             return {
                 ...state,
