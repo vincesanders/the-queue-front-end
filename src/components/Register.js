@@ -8,12 +8,12 @@ import axiosWithAuth from '../utils/axiosWithAuth';
 import styled from "styled-components";
 
 const schema = yup.object().shape({
-  first_name: yup.string().required('First name is required.'),
-  last_name: yup.string().required('Last name is required.'),
-  email: yup.string().email('You must input a valid email address.').required('Email is required.'),
-  username: yup.string().required('Username is required.'),
-  password: yup.string().required('Password is required.').matches(/(?=.*[0-9])/, 'Password must contain at least one number.').matches(/(?=.*[!@#$%^&*])/, 'Password must contain at least one special character.').min(8, 'Password must be at least 8 characters long.')
-})
+  first_name: yup.string().trim().required('First name is required.'),
+  last_name: yup.string().trim().required('Last name is required.'),
+  email: yup.string().trim().email('You must input a valid email address.').required('Email is required.'),
+  username: yup.string().trim().required('Username is required.'),
+  password: yup.string().trim().required('Password is required.').matches(/(?=.*[0-9])/, 'Password must contain at least one number.').matches(/(?=.*[!@#$%^&*])/, 'Password must contain at least one special character.').min(8, 'Password must be at least 8 characters long.')
+});
 
 export default function Register(props) {
   const history = useHistory();

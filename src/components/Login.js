@@ -4,15 +4,22 @@ import { useDispatch } from 'react-redux';
 import { setUserId } from '../state/actions/actions';
 import axiosWithAuth from '../utils/axiosWithAuth';
 import { useForm } from "react-hook-form";
+import * as yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import styled from "styled-components";
+
+const schema = yup.object().shape({
+  username: yup.string().trim().required('Username is required.'),
+  password: yup.string().trim().required('Password is required.').matches(/(?=.*[0-9])/, 'Password must contain at least one number.').matches(/(?=.*[!@#$%^&*])/, 'Password must contain at least one special character.').min(8, 'Password must be at least 8 characters long.')
+});
 
 export default function Login(props) {
     const history = useHistory();
     const dispatch = useDispatch();
     const { register, handleSubmit, errors, formState } = useForm({
-      mode: "onChange"
+      mode: "onChange",
+      validationSchema: schema
     });
     const [ user, setUser ] = useState({});
     console.log(errors);

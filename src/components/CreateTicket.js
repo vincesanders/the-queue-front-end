@@ -2,16 +2,32 @@ import React, { useRef, useState } from "react";
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useForm } from "react-hook-form";
+import * as yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faMinus, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import axiosWithAuth from "../utils/axiosWithAuth";
 import { getAllTicketsByNewest } from '../state/actions/actions';
+
+const schema = yup.object().shape({
+  title: yup.string().trim().required('Title is required.'),
+  description: yup.string().trim().required('Description is required.'),
+  category: yup.string().required('Category is required.').notOneOf(['Select a category'], "Category is required.")
+});
 
 export default () => {
   const dispatch = useDispatch();
   const form = useRef(null);
   const newTicketBtn = useRef(null);
-  const { register, handleSubmit, errors } = useForm();
+  const defaultFormValues = {
+    title: "",
+    description: "",
+    category: "Select a category"
+  };
+  const { register, handleSubmit, errors, reset } = useForm({ 
+    defaultFormValues,
+    mode: "onChange",
+    validationSchema: schema
+  });
   const [isPlus, setIsPlus] = useState(true);
 
   const catgories = [
@@ -22,7 +38,7 @@ export default () => {
     return catgories.map(category => {
         return <option key={category} value={category}>{category}</option>;
     });
-}
+  }
 
   const createTicket = (data) => {
     data = {
@@ -34,6 +50,8 @@ export default () => {
       dispatch(getAllTicketsByNewest());
       //close form.
       handleClick();
+      //reset form values
+      reset({ defaultFormValues });
       //alert or notification that ticket was created
     })
     .catch(({message, errorMessage}) => console.log('Post err', message, errorMessage));
@@ -45,12 +63,12 @@ export default () => {
       e.stopPropagation();
     }
     setIsPlus(!isPlus);
-    if (form.current.style && form.current.style.height === '500px') {
+    if (form.current.style && form.current.style.height === '580px') {
       form.current.style.height = '0';
       form.current.style.visibility = 'hidden';
     } else {
       form.current.style.visibility = 'visible';
-      form.current.style.height = '500px';
+      form.current.style.height = '580px';
     }
 
     if (newTicketBtn.current.classList.contains('pulse')) {
@@ -80,7 +98,11 @@ export default () => {
             name="title"
             ref={register({ required: "Title is required" })}
           />
-          {errors.title && <p className="errors">{errors.title.message}</p>}
+          {errors.title && 
+            <p className="errors">
+              <FontAwesomeIcon icon={faTimesCircle} />
+              <span>{errors.title.message}</span>
+            </p>}
         </label>
         <label>
           Description:
@@ -90,7 +112,10 @@ export default () => {
             ref={register({ required: "Description is required" })}
           />
           {errors.description && (
-            <p className="errors">{errors.description.message}</p>
+            <p className="errors">
+              <FontAwesomeIcon icon={faTimesCircle} />
+              <span>{errors.description.message}</span>
+            </p>
           )}
         </label>
         <label>
@@ -104,7 +129,10 @@ export default () => {
             {populateCategories()}
           </select>
           {errors.category && (
-            <p className="errors">{errors.category.message}</p>
+            <p className="errors">
+              <FontAwesomeIcon icon={faTimesCircle} />
+              <span>{errors.category.message}</span>
+            </p>
           )}
         </label>
         <button type="submit" className="btn btn-dark">
@@ -197,6 +225,7 @@ const Container = styled.div`
     }
     input, textarea, select {
       margin-top: 10px;
+      margin-bottom: 20px;
       background: #f7f7f7;
       padding: 10px;
       border-radius: 8px;
@@ -212,6 +241,18 @@ const Container = styled.div`
       padding: 10px;
       &:hover {
         background-color: #0071eb;
+      }
+    }
+    .errors {
+      margin: 0;
+      text-align: left;
+      margin-top: -20px;
+      font-size: 0.8rem;
+      margin-left: 12px;
+      span {
+        margin-left: 16px;
+        font-weight: normal;
+        color: #656378;
       }
     }
   }
