@@ -41,7 +41,6 @@ export default () => {
         } else {
             return 0;
         }
-        
     });
     const catgories = [
         'HTML', 'CSS', 'JavaScript', 'React', 'Redux', 'Git', 'Node', 'Testing', 'Python', 'Java', 'SQL'

@@ -1,12 +1,25 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styled from "styled-components";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGreaterThan } from '@fortawesome/free-solid-svg-icons'
+import axiosWithAuth from '../utils/axiosWithAuth';
 
 const TicketCard = ({ ticket }) => {
     const containerDiv = useRef(null);
+    const userId = useSelector(state => {
+        if (state.userId > 0) {
+            return state.userId;
+        } else if (localStorage.getItem('user')) {
+            return localStorage.getItem('user');
+        } else {
+            return 0;
+        }
+    });
     const [modal, setModal] = useState(false);
+    const [commentValue, setCommentValue] = useState("");
+    const [comments, setComments] = useState(ticket.comments);
     let days = undefined;
     let hours = undefined;
     let minutes = undefined;
@@ -86,6 +99,33 @@ const TicketCard = ({ ticket }) => {
 
     const closeBtn = <button className="close" onClick={toggleModal}>&times;</button>;
 
+    const handleChange = e => {
+        setCommentValue(e.target.value);
+    }
+
+    const handleSubmit = e => {
+        e.preventDefault();
+        //make sure a comments was entered
+        if (commentValue.trim() !== '') {
+            const comment = {
+                commenter_id: userId,
+                ticket_id: ticket.id,
+                comment: commentValue
+            }
+            axiosWithAuth()
+            .post(`api/tickets/${comment.ticket_id}/comments`, comment)
+            .then(res => {
+                //get the comment info for ticket
+                setComments([...comments, res.data]);
+            })
+            .catch(err => {
+                console.log('Error: ', err);
+            });
+            //reset value
+            setCommentValue('');
+        }
+    }
+
     return (
         <Container ref={containerDiv} onClick={toggleModal} >
             <span>
@@ -111,7 +151,7 @@ const TicketCard = ({ ticket }) => {
                 <ModalFooter>
                     <div className='comment-container'>
                         <h4>Comments:</h4>
-                        {ticket.comments.length > 0 ? ticket.comments.map(comment => {
+                        {ticket.comments.length > 0 ? comments.sort((a, b) => a.id - b.id).map(comment => {
                             return (
                                 <div key={comment.id} >
                                     {comment.image ? <img  src={comment.image} alt={`${comment.username}'s profile picture`} /> : <></> }
@@ -125,9 +165,9 @@ const TicketCard = ({ ticket }) => {
                             );
                         }) :
                         <div><p>Be the first to comment.</p></div>}
-                        <form>
-                            <input placeholder='comment...' />
-                            <button type="submit"><FontAwesomeIcon icon={faGreaterThan} /></button>
+                        <form onSubmit={handleSubmit}>
+                            <input placeholder='comment...' value={commentValue} onChange={handleChange} />
+                            <button type="button" onClick={handleSubmit} ><FontAwesomeIcon icon={faGreaterThan} /></button>
                         </form>
                     </div>
                     <div className='footer-btn-container'>

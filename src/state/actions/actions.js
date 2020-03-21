@@ -12,6 +12,7 @@ import axiosWithAuth from '../../utils/axiosWithAuth';
  */
 export const SET_USER_ID = "SET_USER_ID";
 export const UPDATE_TICKETS = "UPDATE_TICKETS";
+export const UPDATE_COMMENTS = "UPDATE_COMMENTS";
 export const SORT_TICKETS_NEWEST = "SORT_TICKETS_NEWEST";
 export const SORT_TICKETS_OLDEST = "SORT_TICKETS_OLDEST";
 export const FILTER_OPEN_TICKETS = "FILTER_OPEN_TICKETS";
@@ -115,3 +116,20 @@ export const sortTicketsNewest = () => dispatch => {
 export const sortTicketsOldest = () => dispatch => {
     dispatch({ type: SORT_TICKETS_OLDEST });
 }
+
+//Didn't update state
+// export const addComment = comment => dispatch => {
+//     console.log('this is comment insided of addComent in actions: ', comment);
+//     axiosWithAuth()
+//     .post(`api/tickets/${comment.ticket_id}/comments`, comment)
+//     .then(res => {
+//         //get the comment info for ticket
+//         dispatch({ 
+//             type: UPDATE_COMMENTS, 
+//             payload: { ticket_id: comment.ticket_id, comment: res.data }
+//         });
+//     })
+//     .catch(err => {
+//         console.log('Error: ', err);
+//     });
+// }

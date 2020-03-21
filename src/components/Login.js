@@ -11,7 +11,7 @@ import styled from "styled-components";
 
 const schema = yup.object().shape({
   username: yup.string().trim().required('Username is required.'),
-  password: yup.string().trim().required('Password is required.').matches(/(?=.*[0-9])/, 'Password must contain at least one number.').matches(/(?=.*[!@#$%^&*])/, 'Password must contain at least one special character.').min(8, 'Password must be at least 8 characters long.')
+  password: yup.string().trim().required('Password is required.')
 });
 
 export default function Login(props) {
@@ -22,10 +22,8 @@ export default function Login(props) {
       validationSchema: schema
     });
     const [ user, setUser ] = useState({});
-    console.log(errors);
   
     const handleLogin = (data) => {
-        console.log(data)
         axiosWithAuth()
             .post('api/auth/login', data)
             .then(res => {

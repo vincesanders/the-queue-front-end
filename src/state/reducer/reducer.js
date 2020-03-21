@@ -1,5 +1,6 @@
 import { 
-    UPDATE_TICKETS, 
+    UPDATE_TICKETS,
+    UPDATE_COMMENTS,
     ADD_ERROR, 
     SORT_TICKETS_NEWEST, 
     SORT_TICKETS_OLDEST, 
@@ -27,6 +28,18 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 tickets: action.payload,
                 errors: []
+            };
+        case UPDATE_COMMENTS:
+            return {
+                ...state,
+                tickets: [
+                    ...state.tickets,
+                    state.tickets[state.tickets.findIndex(ticket => (ticket.id === action.payload.ticket_id))].comments = [
+
+                                ...state.tickets[state.tickets.findIndex(ticket => (ticket.id === action.payload.ticket_id))].comments,
+                                ...action.payload.comment
+                            ]
+                ]
             };
         case SORT_TICKETS_NEWEST:
             return {
