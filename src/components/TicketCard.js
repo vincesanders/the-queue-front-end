@@ -7,8 +7,6 @@ import { faGreaterThan } from '@fortawesome/free-solid-svg-icons'
 const TicketCard = ({ ticket }) => {
     const containerDiv = useRef(null);
     const [modal, setModal] = useState(false);
-    const ticketCreated = new Date(ticket.created_at);
-    const elapsedTimeMs = Date.now() - ticketCreated;
     let days = undefined;
     let hours = undefined;
     let minutes = undefined;
@@ -51,12 +49,14 @@ const TicketCard = ({ ticket }) => {
             ticketColor = '#656378';
             break;
     }
-    if (elapsedTimeMs / (1000*60*60*24) > 1) {
-        days = Math.round(elapsedTimeMs / (1000*60*60*24));
-    } else if (elapsedTimeMs / (1000*60*60) > 1) {
-        hours = Math.round(elapsedTimeMs / (1000*60*60));
+    //back-end will return the elapsed time in milliseconds
+    //at ticket.created_at
+    if (ticket.created_at / (1000*60*60*24) > 1) {
+        days = Math.round(ticket.created_at / (1000*60*60*24));
+    } else if (ticket.created_at / (1000*60*60) > 1) {
+        hours = Math.round(ticket.created_at / (1000*60*60));
     } else {
-        minutes = Math.round(elapsedTimeMs / (1000*60));
+        minutes = Math.round(ticket.created_at / (1000*60));
     }
 
     const calculateElapsedTime = () => {

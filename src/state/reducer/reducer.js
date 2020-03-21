@@ -32,14 +32,14 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 tickets: [
-                    ...state.tickets.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    ...state.tickets.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
                 ]
             };
         case SORT_TICKETS_OLDEST:
             return {
                 ...state,
                 tickets: [
-                    ...state.tickets.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+                    ...state.tickets.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                 ]
             };
         case FILTER_OPEN_TICKETS:

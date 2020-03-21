@@ -1,13 +1,14 @@
 import React, { useRef, useState } from "react";
-import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 import axiosWithAuth from "../utils/axiosWithAuth";
+import { getAllTicketsByNewest } from '../state/actions/actions';
 
-export default ({ updateTickets, setUpdateTickets }) => {
-  const history = useHistory();
+export default () => {
+  const dispatch = useDispatch();
   const form = useRef(null);
   const newTicketBtn = useRef(null);
   const { register, handleSubmit, errors } = useForm();
@@ -28,17 +29,21 @@ export default ({ updateTickets, setUpdateTickets }) => {
       ...data,
       asker_id: localStorage.getItem('user')
     }
-    console.log('this is data in createTicket:', data);
     axiosWithAuth().post('api/tickets/', data).then(res => {
       //res.data returns the created ticket
-      setUpdateTickets(!updateTickets);
-      history.push('/protected');
+      dispatch(getAllTicketsByNewest());
+      //close form.
+      handleClick();
+      //alert or notification that ticket was created
     })
     .catch(({message, errorMessage}) => console.log('Post err', message, errorMessage));
   }
 
   const handleClick = (e) => {
-    e.stopPropagation();
+    //This function may be called without clicking the button.
+    if (e) {
+      e.stopPropagation();
+    }
     setIsPlus(!isPlus);
     if (form.current.style && form.current.style.height === '500px') {
       form.current.style.height = '0';

@@ -5,7 +5,7 @@ import { getAllTicketsByNewest } from '../state/actions/actions';
 import TicketCard from '../components/TicketCard';
 import styled from 'styled-components';
 
-const TicketList = ({ updateTickets }) => {
+const TicketList = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const tickets = useSelector(state => state.tickets);
@@ -20,13 +20,13 @@ const TicketList = ({ updateTickets }) => {
         //If unable to load tickets, it's likely due to
         //an expired token. We need to route the user back to login
         //when their token expires.
-        // history.push('/login');
+        history.push('/login');
     }
 
     return (
         <Container className="card-container">
             {tickets.length > 0 ? tickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />) :
-            <div>Loading tickets...</div>}
+            <div><h3>The Queue is empty.</h3></div>}
         </Container>
     )
 }
@@ -39,4 +39,9 @@ const Container = styled.div`
     align-items: center;
     width: 45%;
     margin-left: 20%;
+    div {
+        h3 {
+            margin-top: 20px;
+        }
+    }
 `
