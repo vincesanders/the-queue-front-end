@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import styled from "styled-components";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -7,6 +8,7 @@ import { faGreaterThan } from '@fortawesome/free-solid-svg-icons'
 import axiosWithAuth from '../utils/axiosWithAuth';
 
 const TicketCard = ({ ticket }) => {
+    const history = useHistory();
     const containerDiv = useRef(null);
     const userId = useSelector(state => {
         if (state.userId > 0) {
@@ -15,6 +17,17 @@ const TicketCard = ({ ticket }) => {
             return localStorage.getItem('user');
         } else {
             return 0;
+        }
+    });
+    const userRole = useSelector(state => {
+        if (state.userRole !== 'none') {
+            return state.userRole;
+        } else if (localStorage.getItem('role')) {
+            return localStorage.getItem('role');
+        } else {
+            //if there isn't a role in state or local storage
+            //the user will have to login.
+            history.push('/login');
         }
     });
     const [modal, setModal] = useState(false);
@@ -136,8 +149,9 @@ const TicketCard = ({ ticket }) => {
                 <h3>{ticket.category} issue</h3>
                 <p>{ticket.title}</p>
             </div>
-            <div>
+            <div className="imgBtnContainer">
                 {ticket.asker.image ? <img  src={ticket.asker.image} alt={`${ticket.asker.username}'s profile picture`} /> : <></> }
+                {(userRole === 'team lead' ? <button>Assign</button> : <></>)}
             </div>
             <Modal contentClassName='ticket-modal' isOpen={modal} toggle={toggleModal} backdrop={true} fade={false}>
                 <ModalHeader toggle={toggleModal} close={closeBtn}>
@@ -204,9 +218,12 @@ const Container = styled.div`
     }
     div {
         width: 20%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         h3 {
             text-align: left;
-            margin: 0;
+            margin: 0 !important;
             padding-left: 20px;
         }
         p {
@@ -218,9 +235,28 @@ const Container = styled.div`
         img {
             float: right;
             margin-right: 10px;
+            margin-bottom: 10px;
             width: 40px;
             height: 40px;
             border-radius: 50%;
+        }
+    }
+    .imgBtnContainer {
+        align-items: flex-end;
+        justify-content: space-between;
+        button {
+            width: 80px;
+            margin-right: 10px;
+            background: transparent;
+            color: #0071eb;
+            border: 2px solid #0071eb;
+            border-radius: 5px;
+            font-weight: bold;
+            &:hover {
+                color: #fff;
+                background: #0071eb;
+
+            }
         }
     }
     .ticket-modal {

@@ -17,6 +17,7 @@ const schema = yup.object().shape({
   password: yup.string().trim().required('Password is required.').matches(/(?=.*[0-9])/, 'Password must contain at least one number.').matches(/(?=.*[!@#$%^&*])/, 'Password must contain at least one special character.').min(8, 'Password must be at least 8 characters long.')
 });
 
+//TODO: Add some validation to ensure the username doesn't exist.
 export default function Register(props) {
   const history = useHistory();
   const dispatch = useDispatch();

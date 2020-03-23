@@ -14,6 +14,7 @@ const TicketList = () => {
     //on the first render
     useEffect(() => {
         dispatch(getAllTicketsByNewest());
+        //if user is a section lead, add TL list to state.
     },[]);
 
     if (errors.length > 0) {

@@ -12,7 +12,7 @@ import {
 
 const initialState = {
     userId: 0,
-    userRole: 'student',
+    userRole: 'none',
     tickets: [],
     errors: []
 }
