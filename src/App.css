@@ -1,0 +1,15 @@
+.App {
+  text-align: center;
+  background-color: #edf9fc;
+  min-height: 100vh;
+}
+
+.errors {
+  color: red;
+  font-weight: bold;
+}
+
+.ticket-card {
+  display: flex;
+  justify-content: center;
+}
