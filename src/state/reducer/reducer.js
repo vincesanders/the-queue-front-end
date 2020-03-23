@@ -7,10 +7,12 @@ import {
     FILTER_OPEN_TICKETS,
     FILTER_CLOSED_TICKETS,
     FILTER_TICKETS_CATEGORY,
-    SET_USER_ID } from '../actions/actions';
+    SET_USER_ID,
+    SET_USER_ROLE } from '../actions/actions';
 
 const initialState = {
     userId: 0,
+    userRole: 'student',
     tickets: [],
     errors: []
 }
@@ -21,6 +23,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 userId: action.payload
+            }
+        case SET_USER_ROLE:
+            return {
+                ...state,
+                userRole: action.payload
             }
         case UPDATE_TICKETS:
             //payload is all tickets that will be displayed on ticket list.

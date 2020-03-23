@@ -11,6 +11,7 @@ import axiosWithAuth from '../../utils/axiosWithAuth';
  * submit a ticket
  */
 export const SET_USER_ID = "SET_USER_ID";
+export const SET_USER_ROLE = "SET_USER_ROLE";
 export const UPDATE_TICKETS = "UPDATE_TICKETS";
 export const UPDATE_COMMENTS = "UPDATE_COMMENTS";
 export const SORT_TICKETS_NEWEST = "SORT_TICKETS_NEWEST";
@@ -22,6 +23,10 @@ export const ADD_ERROR = "ADD_ERROR";
 
 export const setUserId = id => dispatch => {
     dispatch({ type: SET_USER_ID, payload: id });
+}
+
+export const setUserRole = role => dispatch => {
+    dispatch({ type: SET_USER_ROLE, payload: role });
 }
 
 export const getAllTicketsByNewest = () => dispatch => {
