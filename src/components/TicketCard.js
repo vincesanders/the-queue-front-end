@@ -139,6 +139,31 @@ const TicketCard = ({ ticket }) => {
         }
     }
 
+    const displayTLBtn = role => {
+        if (ticket.assignee === null && !ticket.resolved) {
+            return (
+                <button>Assign</button>
+            );
+        } else if (ticket.assignee === userId) {
+            //style the button differently if the ticket is assigned
+            //to the current user.
+            return (
+                <button className="assigned-to-me">Assigned</button>
+            );
+        } else if (ticket.resolved) {
+            //If the ticket is resolved
+            //disabled, can't click, cursor doesn't change
+            return (
+                <button className="resolved">Resolved</button>
+            );
+        } else {
+            //ticket is assigned, but not to the user.
+            return (
+                <button className="assigned">Assigned</button>
+            );
+        }
+    }
+
     return (
         <Container ref={containerDiv} onClick={toggleModal} >
             <span>
@@ -151,7 +176,8 @@ const TicketCard = ({ ticket }) => {
             </div>
             <div className="imgBtnContainer">
                 {ticket.asker.image ? <img  src={ticket.asker.image} alt={`${ticket.asker.username}'s profile picture`} /> : <></> }
-                {(userRole === 'team lead' ? <button>Assign</button> : <></>)}
+                {(userRole === 'team lead' ? displayTLBtn(userRole) : <></>)}
+                {(userRole === 'section lead' ? displayTLBtn(userRole) : <></>)}
             </div>
             <Modal contentClassName='ticket-modal' isOpen={modal} toggle={toggleModal} backdrop={true} fade={false}>
                 <ModalHeader toggle={toggleModal} close={closeBtn}>
@@ -236,9 +262,10 @@ const Container = styled.div`
             float: right;
             margin-right: 10px;
             margin-bottom: 10px;
-            width: 40px;
+            min-width: 40px;
             height: 40px;
             border-radius: 50%;
+            object-fit: cover;
         }
     }
     .imgBtnContainer {
