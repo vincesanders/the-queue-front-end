@@ -1,5 +1,6 @@
 import { 
     UPDATE_TICKETS,
+    UPDATE_TEAM_LEADS,
     UPDATE_COMMENTS,
     ADD_ERROR, 
     SORT_TICKETS_NEWEST, 
@@ -14,6 +15,7 @@ const initialState = {
     userId: 0,
     userRole: 'none',
     tickets: [],
+    teamLeads: [],
     errors: []
 }
 
@@ -35,6 +37,12 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 tickets: action.payload,
                 errors: []
+            };
+        case UPDATE_TEAM_LEADS:
+            return {
+                ...state,
+                errors: [],
+                teamLeads: action.payload
             };
         case UPDATE_COMMENTS:
             return {

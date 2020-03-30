@@ -107,6 +107,13 @@ code {
   border-radius: 4px;
 }
 
+.footer-btn-container button.resolved {
+  color: #656378;
+  border-color: #656378;
+  cursor: default;
+  background: transparent;
+}
+
 @keyframes pulse {
 	50% {
 		opacity: 0.3;

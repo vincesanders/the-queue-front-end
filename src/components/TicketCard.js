@@ -7,7 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGreaterThan } from '@fortawesome/free-solid-svg-icons'
 import axiosWithAuth from '../utils/axiosWithAuth';
 
-const TicketCard = ({ ticket }) => {
+const TicketCard = (props) => {
+    const [ticket, setTicket] = useState(props.ticket);
     const history = useHistory();
     const containerDiv = useRef(null);
     const userId = useSelector(state => {
@@ -30,6 +31,7 @@ const TicketCard = ({ ticket }) => {
             history.push('/login');
         }
     });
+    const teamLeads = useSelector(state => state.teamLeads);
     const [modal, setModal] = useState(false);
     const [commentValue, setCommentValue] = useState("");
     const [comments, setComments] = useState(ticket.comments);
@@ -141,26 +143,124 @@ const TicketCard = ({ ticket }) => {
 
     const displayTLBtn = role => {
         if (ticket.assignee === null && !ticket.resolved) {
-            return (
-                <button>Assign</button>
-            );
-        } else if (ticket.assignee === userId) {
+            if (role === 'section lead') {
+                return (
+                    <>
+                        <select name='team-lead' defaultValue='Assign' onClick={handleSelectClick} onChange={handleAssignChange}>
+                            <option disabled value='Assign'>Assign</option>
+                            <option value={userId}>Assign to me</option>
+                            {teamLeads.map(tl => {
+                                return <option key={tl.id} value={tl.id}>{tl.first_name} {tl.last_name}</option>
+                            })}
+                        </select>
+                    </>
+                );
+            } else {
+                return (
+                    <button onClick={handleAssignClick}>Assign</button>
+                );
+            }
+            
+        } else if (ticket.assignee.id === Number(userId) && !ticket.resolved) {
             //style the button differently if the ticket is assigned
             //to the current user.
             return (
-                <button className="assigned-to-me">Assigned</button>
+                <button onClick={handleAssignClick} name='assigned-to-me' className="assigned-to-me">Assigned</button>
             );
         } else if (ticket.resolved) {
             //If the ticket is resolved
             //disabled, can't click, cursor doesn't change
-            return (
-                <button className="resolved">Resolved</button>
-            );
+            if (role === 'section lead' || ticket.asker.id === userId) {
+                //if user is an sl or the user who created the ticket
+                return (
+                    <button onClick={handleAssignClick} name='resolved' className="resolved">Resolved</button>
+                );
+            } else {
+                return (
+                    <button disabled className="resolved">Resolved</button>
+                );
+            }
+            
         } else {
             //ticket is assigned, but not to the user.
-            return (
-                <button className="assigned">Assigned</button>
-            );
+            if (role === 'section lead') {
+                return (
+                    <button onClick={handleAssignClick} name='unassign' className="assigned">
+                        Assigned
+                    </button>
+                );
+            } else {
+                return (
+                    <button disabled className="assigned">Assigned</button>
+                );
+            }
+        }
+    }
+
+    const handleSelectClick = e => {
+        e.stopPropagation();
+    }
+
+    const handleAssignClick = e => {
+        e.stopPropagation();
+        e.preventDefault();
+        let changes;
+        if (e.target.name === 'assigned-to-me' || e.target.name === 'unassign') {
+            //unassign myself or tl (if I'm a sl) from a ticket.
+            changes = {
+                being_solved: false,
+                assignee: null,
+                assigned_by: null
+            }
+        } else if (e.target.name === 'resolved') {
+            changes = {
+                resolved: false,
+                solved_by: null
+            }
+        } else if (e.target.name === 'mark-resolved') {
+            console.log('we made it to mark-resolved if statement');
+            if (ticket.resolved) {
+                changes = { resolved: false }
+            } else {
+                changes = { resolved: true }
+            }
+        } else {
+            //Assigns the ticket to the team lead that clicks on the Assign button.
+            changes = {
+                being_solved: true,
+                assignee: userId,
+                assigned_by: userId
+            }
+        }
+        axiosWithAuth()
+        .put(`api/tickets/${ticket.id}`, changes)
+        .then(res => {
+            setTicket(res.data);
+        })
+        .catch(err => console.log(err));
+    }
+
+    const handleAssignChange = e => {
+        const changes = {
+            being_solved: true,
+            assignee: e.target.value,
+            assigned_by: userId
+        }
+        axiosWithAuth()
+        .put(`api/tickets/${ticket.id}`, changes)
+        .then(res => {
+            setTicket(res.data);
+        })
+        .catch(err => console.log(err));
+    }
+
+    const isAskerAsigneeOrSL = () => {
+        if (ticket.asker.id === userId || (ticket.assignee && ticket.assignee.id === userId) || userRole === 'section lead') {
+            console.log('isAskerAsigneeOrSL returned true')
+            return true;
+        } else {
+            console.log('isAskerAsigneeOrSL returned false')
+            return false;
         }
     }
 
@@ -183,7 +283,7 @@ const TicketCard = ({ ticket }) => {
                 <ModalHeader toggle={toggleModal} close={closeBtn}>
                     <h2>{ticket.category} issue</h2>
                     {ticket.title}
-                    </ModalHeader>
+                </ModalHeader>
                 <ModalBody>
                     <h3>Description of issue</h3>
                     <p>{ticket.description}</p>
@@ -211,7 +311,15 @@ const TicketCard = ({ ticket }) => {
                         </form>
                     </div>
                     <div className='footer-btn-container'>
-                        <Button color="primary" onClick={toggleModal}>Do Something</Button>{' '}
+                        <Button 
+                            disabled={isAskerAsigneeOrSL() ? false : ticket.resolved} 
+                            className={ticket.resolved ? 'resolved' : ''} 
+                            name='mark-resolved' color="primary" 
+                            onClick={handleAssignClick}
+                        >
+                            {ticket.resolved ? 'Resolved' : 'Mark as Resolved'}
+                        </Button>
+                        {' '}
                         <Button color="secondary" onClick={toggleModal}>Cancel</Button>
                     </div>
                 </ModalFooter>
@@ -284,7 +392,7 @@ const Container = styled.div`
         align-items: flex-end;
         justify-content: space-between;
         button {
-            width: 80px;
+            width: 84px;
             margin-right: 10px;
             background: transparent;
             color: #0071eb;
@@ -294,7 +402,48 @@ const Container = styled.div`
             &:hover {
                 color: #fff;
                 background: #0071eb;
-
+            }
+            &.assigned-to-me {
+                color: #fff;
+                background: #0071eb; 
+            }
+            &.assigned {
+                color: #656378;
+                border-color: #656378;
+                cursor: default;
+                &:hover {
+                    background: transparent;
+                    color: #656378;
+                }
+            }
+        }
+        select {
+            width: 84px;
+            margin-right: 10px;
+            background: transparent;
+            color: #0071eb;
+            border: 2px solid #0071eb;
+            border-radius: 5px;
+            font-weight: bold;
+            outline: none;
+            padding: 2px 5px;
+            /* center select text */
+            text-align-last: center;
+            /* Remove arrow */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            &:hover {
+                color: #fff;
+                background: #0071eb;
+            }
+            option {
+                background: #fff;
+                color: #000;
+                text-align: center;
+                &:disabled {
+                    display: none;
+                }
             }
         }
     }

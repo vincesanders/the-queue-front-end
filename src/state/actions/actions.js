@@ -13,6 +13,7 @@ import axiosWithAuth from '../../utils/axiosWithAuth';
 export const SET_USER_ID = "SET_USER_ID";
 export const SET_USER_ROLE = "SET_USER_ROLE";
 export const UPDATE_TICKETS = "UPDATE_TICKETS";
+export const UPDATE_TEAM_LEADS = "UPDATE_TEAM_LEADS";
 export const UPDATE_COMMENTS = "UPDATE_COMMENTS";
 export const SORT_TICKETS_NEWEST = "SORT_TICKETS_NEWEST";
 export const SORT_TICKETS_OLDEST = "SORT_TICKETS_OLDEST";
@@ -102,6 +103,19 @@ export const getTicketsFilteredByCategory = category => dispatch => {
     });
 }
 
+export const getallTeamLeads = () => dispatch => {
+    axiosWithAuth()
+    .post(`api/users/getby/filter`, { role: 'team lead' })
+    .then(res => {
+        //returns an array of team leads
+        dispatch({ type: UPDATE_TEAM_LEADS, payload: res.data });
+    })
+    .catch(err => {
+        console.log('Error', err.respond);
+        dispatch({ type: ADD_ERROR, payload: err });
+    });
+}
+
 export const searchTickets = (searchValue, searchByOption) => dispatch => {
     axiosWithAuth()
     .post(`api/tickets/getby/filter`, { [searchByOption]: searchValue })
@@ -138,3 +152,7 @@ export const sortTicketsOldest = () => dispatch => {
 //         console.log('Error: ', err);
 //     });
 // }
+
+export const assignTeamLead = () => dispatch => {
+    dispatch();
+}
