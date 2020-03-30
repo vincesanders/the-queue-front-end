@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import styled from "styled-components";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGreaterThan } from '@fortawesome/free-solid-svg-icons'
+import { faGreaterThan, faTimes } from '@fortawesome/free-solid-svg-icons'
 import axiosWithAuth from '../utils/axiosWithAuth';
 
 const TicketCard = (props) => {
@@ -278,6 +278,10 @@ const TicketCard = (props) => {
                 <p>{ticket.title}</p>
             </div>
             <div className="imgBtnContainer">
+                <button className='delete-btn'>
+                    <FontAwesomeIcon icon={faTimes} />
+                    <span className={props.index === 0 ? 'first-ticket' : ''}>Delete ticket?</span>
+                </button>
                 {ticket.asker.image ? <img  src={ticket.asker.image} alt={`${ticket.asker.username}'s profile picture`} /> : <></> }
                 {(userRole === 'team lead' || userRole === 'section lead') 
                 ? displayTLBtn(userRole, false) 
@@ -397,6 +401,58 @@ const Container = styled.div`
     .imgBtnContainer {
         align-items: flex-end;
         justify-content: space-between;
+        .delete-btn {
+            color: #df0d0e;
+            font-weight: normal;
+            width: auto;
+            border: none;
+            font-size: 12px;
+            vertical-align: middle;
+            border-radius: 50%;
+            margin-top: -16px;
+            margin-bottom: 5px;
+            margin-right: -10px;
+            position: relative;
+            &:hover {
+                background: #df0d0e;
+                span {
+                    opacity: 1;
+                }
+            }
+            span {
+                opacity: 0;
+                width: 100px;
+                background-color: rgba(0, 0, 0, 0.3);
+                color: #000;
+                text-align: center;
+                padding: 5px 0;
+                position: absolute;
+                z-index: 1;
+                bottom: 150%;
+                left: 50%;
+                margin-left: -50px;
+                font-size: 10px;
+                transition: opacity 0.5s;
+                &::after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -5px;
+                    border-width: 5px;
+                    border-style: solid;
+                    border-color: rgba(0, 0, 0, 0.3)transparent transparent transparent;
+                }
+            }
+            .first-ticket {
+                bottom: -150%;
+                &::after {
+                    bottom: 100%;
+                    top: -100%;
+                    border-color: transparent transparent rgba(0, 0, 0, 0.3) transparent;
+                }
+            }
+        }
         button {
             width: 84px;
             margin-right: 10px;

@@ -40,7 +40,7 @@ const TicketList = () => {
 
     return (
         <Container className="card-container">
-            {tickets.length > 0 ? tickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />) :
+            {tickets.length > 0 ? tickets.map((ticket, i) => <TicketCard key={ticket.id} ticket={ticket} index={i} />) :
             <div><h3>The Queue is empty.</h3></div>}
         </Container>
     )
