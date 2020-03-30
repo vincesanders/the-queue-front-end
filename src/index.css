@@ -20,6 +20,25 @@ code {
   top: 25%;
 }
 
+.delete-modal {
+  margin-left: 47% !important;
+  top: 0;
+}
+
+.delete-modal svg {
+  color: #df0d0e;
+  font-size: 60px;
+  margin-bottom: 30px;
+}
+
+.delete-modal .modal-body {
+  text-align: center;
+}
+
+.delete-modal .modal-footer {
+  flex-direction: row;
+}
+
 .comment-container {
   margin-left: -100px;
 }

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import styled from "styled-components";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGreaterThan, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faGreaterThan, faTimes, faExclamation } from '@fortawesome/free-solid-svg-icons'
 import axiosWithAuth from '../utils/axiosWithAuth';
 
 const TicketCard = (props) => {
@@ -33,6 +33,7 @@ const TicketCard = (props) => {
     });
     const teamLeads = useSelector(state => state.teamLeads);
     const [modal, setModal] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
     const [commentValue, setCommentValue] = useState("");
     const [comments, setComments] = useState(ticket.comments);
     let days = undefined;
@@ -110,6 +111,11 @@ const TicketCard = (props) => {
     const toggleModal = (e) => {
         e.stopPropagation();
         setModal(!modal);
+    }
+
+    const toggleDeleteModal = (e) => {
+        e.stopPropagation();
+        setDeleteModal(!deleteModal);
     }
 
     const closeBtn = <button className="close" onClick={toggleModal}>&times;</button>;
@@ -278,7 +284,7 @@ const TicketCard = (props) => {
                 <p>{ticket.title}</p>
             </div>
             <div className="imgBtnContainer">
-                <button className='delete-btn'>
+                <button onClick={toggleDeleteModal} className='delete-btn'>
                     <FontAwesomeIcon icon={faTimes} />
                     <span className={props.index === 0 ? 'first-ticket' : ''}>Delete ticket?</span>
                 </button>
@@ -332,6 +338,18 @@ const TicketCard = (props) => {
                         {' '}
                         <Button color="secondary" onClick={toggleModal}>Cancel</Button>
                     </div>
+                </ModalFooter>
+            </Modal>
+            <Modal className='delete-modal' isOpen={deleteModal} toggle={toggleDeleteModal}>
+                <ModalBody>
+                    <FontAwesomeIcon icon={faExclamation} />
+                    <h4>Are you sure you want to delete the ticket?</h4>
+                    <p>This cannot be undone!</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="danger">Delete</Button>
+                    {' '}
+                    <Button color="secondary" onClick={toggleDeleteModal}>Cancel</Button>
                 </ModalFooter>
             </Modal>
         </Container>
@@ -413,6 +431,7 @@ const Container = styled.div`
             margin-bottom: 5px;
             margin-right: -10px;
             position: relative;
+            outline: none;
             &:hover {
                 background: #df0d0e;
                 span {
