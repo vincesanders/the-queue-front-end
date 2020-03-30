@@ -165,7 +165,7 @@ const TicketCard = ({ ticket }) => {
     }
 
     return (
-        <Container ref={containerDiv} onClick={toggleModal} >
+        <Container ref={containerDiv} onClick={toggleModal} className={ticket.resolved ? 'resolved-ticket' : ''} >
             <span>
                 {calculateElapsedTime()}
                 <span>old</span>
@@ -229,6 +229,18 @@ const Container = styled.div`
     padding: 20px 0;
     cursor: pointer;
     border-radius: 8px;
+    &.resolved-ticket {
+        background-color: #efefef;
+        .resolved {
+            color: #656378;
+            border-color: #656378;
+            cursor: default;
+            &:hover {
+                background: transparent;
+                color: #656378;
+            }
+        }
+    }
     span {
         width: 18%;
         text-align: center;
