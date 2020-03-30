@@ -141,7 +141,7 @@ const TicketCard = (props) => {
         }
     }
 
-    const displayTLBtn = role => {
+    const displayTLBtn = (role, isInModal) => {
         if (ticket.assignee === null && !ticket.resolved) {
             if (role === 'section lead') {
                 return (
@@ -157,7 +157,7 @@ const TicketCard = (props) => {
                 );
             } else {
                 return (
-                    <button onClick={handleAssignClick}>Assign</button>
+                    <button className='assign' onClick={handleAssignClick}>Assign</button>
                 );
             }
             
@@ -169,18 +169,21 @@ const TicketCard = (props) => {
             );
         } else if (ticket.resolved) {
             //If the ticket is resolved
-            //disabled, can't click, cursor doesn't change
-            if (role === 'section lead' || ticket.asker.id === userId) {
-                //if user is an sl or the user who created the ticket
-                return (
-                    <button onClick={handleAssignClick} name='resolved' className="resolved">Resolved</button>
-                );
+            if (isInModal) {
+                return <></>;
             } else {
-                return (
-                    <button disabled className="resolved">Resolved</button>
-                );
+                //disabled, can't click, cursor doesn't change
+                if (role === 'section lead' || ticket.asker.id === userId) {
+                    //if user is an sl or the user who created the ticket
+                    return (
+                        <button onClick={handleAssignClick} name='resolved' className="resolved">Resolved</button>
+                    );
+                } else {
+                    return (
+                        <button disabled className="resolved">Resolved</button>
+                    );
+                }
             }
-            
         } else {
             //ticket is assigned, but not to the user.
             if (role === 'section lead') {
@@ -276,8 +279,9 @@ const TicketCard = (props) => {
             </div>
             <div className="imgBtnContainer">
                 {ticket.asker.image ? <img  src={ticket.asker.image} alt={`${ticket.asker.username}'s profile picture`} /> : <></> }
-                {(userRole === 'team lead' ? displayTLBtn(userRole) : <></>)}
-                {(userRole === 'section lead' ? displayTLBtn(userRole) : <></>)}
+                {(userRole === 'team lead' || userRole === 'section lead') 
+                ? displayTLBtn(userRole, false) 
+                : <></>}
             </div>
             <Modal contentClassName='ticket-modal' isOpen={modal} toggle={toggleModal} backdrop={true} fade={false}>
                 <ModalHeader toggle={toggleModal} close={closeBtn}>
@@ -319,6 +323,8 @@ const TicketCard = (props) => {
                         >
                             {ticket.resolved ? 'Resolved' : 'Mark as Resolved'}
                         </Button>
+                        {' '}
+                        {displayTLBtn(userRole, true)}
                         {' '}
                         <Button color="secondary" onClick={toggleModal}>Cancel</Button>
                     </div>

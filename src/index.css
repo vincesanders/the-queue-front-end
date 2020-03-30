@@ -114,6 +114,69 @@ code {
   background: transparent;
 }
 
+.footer-btn-container button.assign {
+  background: transparent;
+  color: #0071eb;
+  border: 2px solid #0071eb;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.footer-btn-container button.assign:hover {
+  color: #fff;
+  background: #0071eb;
+}
+
+.footer-btn-container button.assigned-to-me {
+  color: #fff;
+  background: #0071eb; 
+}
+
+.footer-btn-container button.assigned {
+  color: #656378;
+  background: transparent;
+  border-color: #656378;
+  cursor: default;
+}
+
+.footer-btn-container button.assigned:hover {
+  background: transparent;
+  color: #656378;
+}
+
+.footer-btn-container select {
+  /* width: 84px; */
+  margin-right: 10px;
+  background: transparent;
+  color: #0071eb;
+  border: 2px solid #0071eb;
+  border-radius: 5px;
+  font-weight: bold;
+  outline: none;
+  padding: 2px 5px;
+  /* center select text */
+  text-align-last: center;
+  /* Remove arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.footer-btn-container select:hover {
+  color: #fff;
+  background: #0071eb;
+}
+
+.footer-btn-container select option {
+  background: #fff;
+  color: #000;
+  text-align: center;
+}
+
+.footer-btn-container select option:disabled {
+  display: none;
+}
+
 @keyframes pulse {
 	50% {
 		opacity: 0.3;
