@@ -341,7 +341,7 @@ const TicketCard = (props) => {
                         {' '}
                         {displayTLBtn(userRole, true)}
                         {' '}
-                        <Button color="secondary" onClick={toggleModal}>Cancel</Button>
+                        <Button color="danger" onClick={toggleDeleteModal}>Delete</Button>
                     </div>
                 </ModalFooter>
             </Modal>
@@ -441,22 +441,24 @@ const Container = styled.div`
                 background: #df0d0e;
                 span {
                     opacity: 1;
+                    transition: opacity 2s ease-in;
                 }
             }
             span {
                 opacity: 0;
-                width: 100px;
-                background-color: rgba(0, 0, 0, 0.3);
-                color: #000;
+                width: 80px;
+                background-color: #c717c4;
+                color: #fff;
+                border-radius: 2px;
+                border: none;
                 text-align: center;
-                padding: 5px 0;
                 position: absolute;
                 z-index: 1;
                 bottom: 150%;
                 left: 50%;
-                margin-left: -50px;
+                margin-left: -40px;
                 font-size: 10px;
-                transition: opacity 0.5s;
+                transition: opacity 0.3s;
                 &::after {
                     content: "";
                     position: absolute;
@@ -465,7 +467,7 @@ const Container = styled.div`
                     margin-left: -5px;
                     border-width: 5px;
                     border-style: solid;
-                    border-color: rgba(0, 0, 0, 0.3)transparent transparent transparent;
+                    border-color: #c717c4 transparent transparent transparent;
                 }
             }
             .first-ticket {
@@ -473,7 +475,7 @@ const Container = styled.div`
                 &::after {
                     bottom: 100%;
                     top: -100%;
-                    border-color: transparent transparent rgba(0, 0, 0, 0.3) transparent;
+                    border-color: transparent transparent #2f2c49 transparent;
                 }
             }
         }
