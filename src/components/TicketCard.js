@@ -296,15 +296,15 @@ const TicketCard = (props) => {
                     <FontAwesomeIcon icon={faTimes} />
                     <span className={props.index === 0 ? 'first-ticket' : ''}>Delete ticket?</span>
                 </button>
-                {ticket.asker.image ? <img  src={ticket.asker.image} alt={`${ticket.asker.username}'s profile picture`} /> : <></> }
+                {ticket.asker.image ? <img  src={ticket.asker.image} alt={ticket.asker.username} /> : <></> }
                 {(userRole === 'team lead' || userRole === 'section lead') 
                 ? displayTLBtn(userRole, false) 
                 : <></>}
             </div>
             <Modal contentClassName='ticket-modal' isOpen={modal} toggle={toggleModal} backdrop={true} fade={false}>
                 <ModalHeader toggle={toggleModal} close={closeBtn}>
-                    <h2>{ticket.category} issue</h2>
-                    {ticket.title}
+                    {ticket.category} issue<br/>
+                    <span>{ticket.title}</span>
                 </ModalHeader>
                 <ModalBody>
                     <h3>Description of issue</h3>
@@ -316,7 +316,7 @@ const TicketCard = (props) => {
                         {ticket.comments.length > 0 ? comments.sort((a, b) => a.id - b.id).map(comment => {
                             return (
                                 <div key={comment.id} >
-                                    {comment.image ? <img  src={comment.image} alt={`${comment.username}'s profile picture`} /> : <></> }
+                                    {comment.image ? <img  src={comment.image} alt={comment.username} /> : <></> }
                                     <div>
                                         <p className='commenter-name'>
                                             {comment.first_name} {comment.last_name}

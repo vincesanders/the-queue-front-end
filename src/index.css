@@ -196,6 +196,13 @@ code {
   display: none;
 }
 
+.modal-title {
+  font-size: 36px;
+}
+.modal-title  span {
+  font-size: 20px;
+}
+
 @keyframes pulse {
 	50% {
 		opacity: 0.3;
