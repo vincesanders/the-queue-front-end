@@ -8,6 +8,7 @@ import {
     FILTER_OPEN_TICKETS,
     FILTER_CLOSED_TICKETS,
     FILTER_TICKETS_CATEGORY,
+    REMOVE_TICKET,
     SET_USER_ID,
     SET_USER_ROLE } from '../actions/actions';
 
@@ -90,7 +91,14 @@ const reducer = (state = initialState, action) => {
                 tickets: [
                     ...action.payload.tickets.filter(ticket => ticket.category === action.payload.category)
                 ]
-            }
+            };
+        case REMOVE_TICKET:
+            return {
+                ...state,
+                tickets: [
+                    ...state.tickets.filter(ticket => ticket.id !== action.payload)
+                ]
+            };
         case ADD_ERROR:
             return {
                 ...state,

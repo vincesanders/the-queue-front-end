@@ -20,6 +20,7 @@ export const SORT_TICKETS_OLDEST = "SORT_TICKETS_OLDEST";
 export const FILTER_OPEN_TICKETS = "FILTER_OPEN_TICKETS";
 export const FILTER_CLOSED_TICKETS = "FILTER_CLOSED_TICKETS";
 export const FILTER_TICKETS_CATEGORY = "FILTER_TICKETS_CATEGORY";
+export const REMOVE_TICKET = "REMOVE_TICKET";
 export const ADD_ERROR = "ADD_ERROR";
 
 export const setUserId = id => dispatch => {
@@ -153,6 +154,15 @@ export const sortTicketsOldest = () => dispatch => {
 //     });
 // }
 
-export const assignTeamLead = () => dispatch => {
-    dispatch();
+export const removeTicket = ticketId => dispatch => {
+    console.log('this is ticketId in removeTicket action: ', ticketId);
+    axiosWithAuth()
+    .delete(`api/tickets/${ticketId}`)
+    .then(res => {
+        //res.data is the deleted ticket.
+        dispatch({ type: REMOVE_TICKET, payload: res.data.id });
+    })
+    .catch(err => {
+        console.log('Error', err, '\n', err.message, '\n', err.errorMessage);
+    });
 }

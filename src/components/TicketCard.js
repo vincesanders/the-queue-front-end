@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeTicket } from '../state/actions/actions';
 import styled from "styled-components";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,6 +11,7 @@ import axiosWithAuth from '../utils/axiosWithAuth';
 const TicketCard = (props) => {
     const [ticket, setTicket] = useState(props.ticket);
     const history = useHistory();
+    const dispatch = useDispatch();
     const containerDiv = useRef(null);
     const userId = useSelector(state => {
         if (state.userId > 0) {
@@ -265,12 +267,15 @@ const TicketCard = (props) => {
 
     const isAskerAsigneeOrSL = () => {
         if (ticket.asker.id === userId || (ticket.assignee && ticket.assignee.id === userId) || userRole === 'section lead') {
-            console.log('isAskerAsigneeOrSL returned true')
             return true;
         } else {
-            console.log('isAskerAsigneeOrSL returned false')
             return false;
         }
+    }
+
+    const deleteTicket = e => {
+        dispatch(removeTicket(ticket.id));
+        toggleDeleteModal(e);
     }
 
     return (
@@ -347,7 +352,7 @@ const TicketCard = (props) => {
                     <p>This cannot be undone!</p>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="danger">Delete</Button>
+                    <Button onClick={deleteTicket} color="danger">Delete</Button>
                     {' '}
                     <Button color="secondary" onClick={toggleDeleteModal}>Cancel</Button>
                 </ModalFooter>
