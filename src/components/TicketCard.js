@@ -38,6 +38,8 @@ const TicketCard = (props) => {
     const [deleteModal, setDeleteModal] = useState(false);
     const [commentValue, setCommentValue] = useState("");
     const [comments, setComments] = useState(ticket.comments);
+    const [title, setTitle] = useState(ticket.title);
+    const [description, setDescription] = useState(ticket.description);
     let days = undefined;
     let hours = undefined;
     let minutes = undefined;
@@ -123,10 +125,22 @@ const TicketCard = (props) => {
     const closeBtn = <button className="close" onClick={toggleModal}>&times;</button>;
 
     const handleChange = e => {
-        setCommentValue(e.target.value);
+        switch (e.target.name) {
+            case 'title':
+                setTitle(e.target.value);
+                break;
+            case 'description':
+                setDescription(e.target.value);
+                break;
+            case 'comment':
+                setCommentValue(e.target.value);
+                break;
+            default:
+                break;
+        }
     }
 
-    const handleSubmit = e => {
+    const handleCommentSubmit = e => {
         e.preventDefault();
         //make sure a comments was entered
         if (commentValue.trim() !== '') {
@@ -281,6 +295,29 @@ const TicketCard = (props) => {
         }
     }
 
+    const handleBlur = e => {
+        if (e.target.value.trim() === '') {
+            e.target.name === 'title' ? setTitle(ticket.title) : setDescription(ticket.description);
+        } else {
+            //send the changes to the database
+            axiosWithAuth()
+            .put(`api/tickets/${ticket.id}`, { [e.target.name]: e.target.value })
+            .then(res => {
+                //We don't need the update ticket info, since we're keeping
+                //track of state on the client-side.
+            })
+            .catch(err => {
+                console.log('Something went wrong when trying to make changes to the ticket in the database.\n', err);
+            })
+        }
+    }
+
+    const handleKeyDown = e => {
+        if (e.keyCode === 13) {
+            e.target.blur(); //triggers handleBlur
+        }
+    }
+
     return (
         <Container ref={containerDiv} onClick={toggleModal} className={ticket.resolved ? 'resolved-ticket' : ''} >
             <span>
@@ -289,7 +326,7 @@ const TicketCard = (props) => {
             </span>
             <div>
                 <h3>{ticket.category} issue</h3>
-                <p>{ticket.title}</p>
+                <p>{title}</p>
             </div>
             <div className="imgBtnContainer">
                 <button onClick={toggleDeleteModal} className='delete-btn'>
@@ -304,11 +341,11 @@ const TicketCard = (props) => {
             <Modal contentClassName='ticket-modal' isOpen={modal} toggle={toggleModal} backdrop={true} fade={false}>
                 <ModalHeader toggle={toggleModal} close={closeBtn}>
                     {ticket.category} issue<br/>
-                    <span>{ticket.title}</span>
+                    <input type="text" name="title" value={title} onChange={handleChange} onBlur={handleBlur} onKeyDown={handleKeyDown} />
                 </ModalHeader>
                 <ModalBody>
                     <h3>Description of issue</h3>
-                    <p>{ticket.description}</p>
+                    <textarea rows='4' name="description" onChange={handleChange} onBlur={handleBlur} onKeyDown={handleKeyDown} value={description} />
                 </ModalBody>
                 <ModalFooter>
                     <div className='comment-container'>
@@ -327,9 +364,9 @@ const TicketCard = (props) => {
                             );
                         }) :
                         <div><p>Be the first to comment.</p></div>}
-                        <form onSubmit={handleSubmit}>
-                            <input placeholder='comment...' value={commentValue} onChange={handleChange} />
-                            <button type="button" onClick={handleSubmit} ><FontAwesomeIcon icon={faGreaterThan} /></button>
+                        <form onSubmit={handleCommentSubmit}>
+                            <input placeholder='comment...' name='comment' value={commentValue} onChange={handleChange} />
+                            <button type="button" onClick={handleCommentSubmit} ><FontAwesomeIcon icon={faGreaterThan} /></button>
                         </form>
                     </div>
                     <div className='footer-btn-container'>

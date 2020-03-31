@@ -198,9 +198,29 @@ code {
 
 .modal-title {
   font-size: 36px;
+  width: 100%;
 }
-.modal-title  span {
+.modal-title input {
   font-size: 20px;
+  width: 107%;
+  border: none;
+  outline: none;
+}
+
+.modal-title input:focus {
+  border-bottom: 4px solid #47c8e8;
+}
+
+.modal-body textarea {
+  width: 100%;
+  border: none;
+  resize: none;
+  border-bottom: 4px solid transparent;
+  outline: none;
+}
+
+.modal-body textarea:focus {
+  border-bottom-color: #47c8e8;
 }
 
 @keyframes pulse {
