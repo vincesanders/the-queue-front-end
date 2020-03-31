@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import axiosWithAuth from '../utils/axiosWithAuth';
 import styled from "styled-components";
-import { setUserId, setUserRole } from "../state/actions/actions";
+import { setUser } from "../state/actions/actions";
 
 const schema = yup.object().shape({
   first_name: yup.string().trim().required('First name is required.'),
@@ -33,8 +33,8 @@ export default function Register(props) {
       localStorage.setItem('user', res.data.user.id);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.user.role);
-      dispatch(setUserId(res.data.user.id));
-      dispatch(setUserRole(res.data.user.role));
+      localStorage.setItem('profile', JSON.stringify(res.data.user));
+      dispatch(setUser(res.data.user));
       history.push('/protected');      
     })
     .catch(err => console.log('Post err', err));

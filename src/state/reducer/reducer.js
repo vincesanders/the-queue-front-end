@@ -10,11 +10,14 @@ import {
     FILTER_TICKETS_CATEGORY,
     REMOVE_TICKET,
     SET_USER_ID,
-    SET_USER_ROLE } from '../actions/actions';
+    SET_USER_ROLE, 
+    SET_USER,
+    RESET_STATE } from '../actions/actions';
 
 const initialState = {
     userId: 0,
     userRole: 'none',
+    user: {},
     tickets: [],
     teamLeads: [],
     errors: []
@@ -31,6 +34,13 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 userRole: action.payload
+            }
+        case SET_USER:
+            return {
+                ...state,
+                user: {
+                    ...action.payload
+                }
             }
         case UPDATE_TICKETS:
             //payload is all tickets that will be displayed on ticket list.
@@ -106,6 +116,10 @@ const reducer = (state = initialState, action) => {
                     ...state.errors,
                     action.payload
                 ]
+            };
+        case RESET_STATE:
+            return {
+                ...initialState
             };
         default:
             return state;

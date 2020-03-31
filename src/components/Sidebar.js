@@ -14,6 +14,7 @@ import {
     } from '../state/actions/actions';
 import { faChevronRight, faChevronDown, faSearch } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components';
+import Profile from './Profile';
 
 export default () => {
     const dispatch = useDispatch();
@@ -242,6 +243,7 @@ export default () => {
                     <option value='description'>Description</option>
                 </select>
             </form>
+            <Profile />
         </Container>
     );
 }

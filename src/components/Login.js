@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setUserId, setUserRole } from '../state/actions/actions';
+import { setUser } from '../state/actions/actions';
 import axiosWithAuth from '../utils/axiosWithAuth';
 import { useForm } from "react-hook-form";
 import * as yup from 'yup';
@@ -21,17 +21,15 @@ export default function Login(props) {
       mode: "onChange",
       validationSchema: schema
     });
-    const [ user, setUser ] = useState({});
   
     const handleLogin = (data) => {
         axiosWithAuth()
             .post('api/auth/login', data)
             .then(res => {
-              setUser(res.data.user);
               localStorage.setItem('user', res.data.user.id);
               localStorage.setItem('role', res.data.user.role);
-              dispatch(setUserId(res.data.user.id));
-              dispatch(setUserRole(res.data.user.role));
+              localStorage.setItem('profile', JSON.stringify(res.data.user));
+              dispatch(setUser(res.data.user));
               localStorage.setItem('token', res.data.token);
               history.push('/protected');
             })

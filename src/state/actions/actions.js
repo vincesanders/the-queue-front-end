@@ -12,6 +12,7 @@ import axiosWithAuth from '../../utils/axiosWithAuth';
  */
 export const SET_USER_ID = "SET_USER_ID";
 export const SET_USER_ROLE = "SET_USER_ROLE";
+export const SET_USER = "SET_USER";
 export const UPDATE_TICKETS = "UPDATE_TICKETS";
 export const UPDATE_TEAM_LEADS = "UPDATE_TEAM_LEADS";
 export const UPDATE_COMMENTS = "UPDATE_COMMENTS";
@@ -22,6 +23,7 @@ export const FILTER_CLOSED_TICKETS = "FILTER_CLOSED_TICKETS";
 export const FILTER_TICKETS_CATEGORY = "FILTER_TICKETS_CATEGORY";
 export const REMOVE_TICKET = "REMOVE_TICKET";
 export const ADD_ERROR = "ADD_ERROR";
+export const RESET_STATE = "RESET_STATE";
 
 export const setUserId = id => dispatch => {
     dispatch({ type: SET_USER_ID, payload: id });
@@ -29,6 +31,13 @@ export const setUserId = id => dispatch => {
 
 export const setUserRole = role => dispatch => {
     dispatch({ type: SET_USER_ROLE, payload: role });
+}
+
+export const setUser = user => dispatch => {
+    console.log('user in setUser action: ', user);
+    setUserId(user.id);
+    setUserRole(user.role);
+    dispatch({ type: SET_USER, payload: user });
 }
 
 export const getAllTicketsByNewest = () => dispatch => {
@@ -165,4 +174,8 @@ export const removeTicket = ticketId => dispatch => {
     .catch(err => {
         console.log('Error', err, '\n', err.message, '\n', err.errorMessage);
     });
+}
+
+export const resetState = () => dispatch => {
+    dispatch({ type: RESET_STATE });
 }
