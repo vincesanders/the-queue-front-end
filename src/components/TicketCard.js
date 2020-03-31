@@ -276,6 +276,9 @@ const TicketCard = (props) => {
     const deleteTicket = e => {
         dispatch(removeTicket(ticket.id));
         toggleDeleteModal(e);
+        if (e.target.name === 'modal-delete-btn') {
+            toggleModal(e);
+        }
     }
 
     return (
@@ -341,7 +344,7 @@ const TicketCard = (props) => {
                         {' '}
                         {displayTLBtn(userRole, true)}
                         {' '}
-                        <Button color="danger" onClick={toggleDeleteModal}>Delete</Button>
+                        <Button name='modal-delete-btn' color="danger" onClick={toggleDeleteModal}>Delete</Button>
                     </div>
                 </ModalFooter>
             </Modal>
