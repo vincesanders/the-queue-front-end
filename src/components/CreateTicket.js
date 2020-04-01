@@ -256,4 +256,12 @@ const Container = styled.div`
       }
     }
   }
+  @media screen and (max-width: 1200px) {
+    width: 80%;
+    margin-left: 20%;
+    form {
+      width: 80%;
+      margin-bottom: 40px;
+    }
+  }
 `

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllTicketsByNewest } from '../state/actions/actions';
+import { getAllTicketsByNewest, getallTeamLeads } from '../state/actions/actions';
 import TicketCard from '../components/TicketCard';
 import styled from 'styled-components';
 
@@ -10,11 +10,25 @@ const TicketList = () => {
     const dispatch = useDispatch();
     const tickets = useSelector(state => state.tickets);
     const errors = useSelector(state => state.errors);
+    const userRole = useSelector(state => {
+        if (state.userRole !== 'none') {
+            return state.userRole;
+        } else if (localStorage.getItem('role')) {
+            return localStorage.getItem('role');
+        } else {
+            //if there isn't a role in state or local storage
+            //the user will have to login.
+            history.push('/login');
+        }
+    });
 
     //on the first render
     useEffect(() => {
         dispatch(getAllTicketsByNewest());
         //if user is a section lead, add TL list to state.
+        if(userRole === 'section lead') {
+            dispatch(getallTeamLeads());
+        }
     },[]);
 
     if (errors.length > 0) {
@@ -26,7 +40,7 @@ const TicketList = () => {
 
     return (
         <Container className="card-container">
-            {tickets.length > 0 ? tickets.map(ticket => <TicketCard key={ticket.id} ticket={ticket} />) :
+            {tickets.length > 0 ? tickets.map((ticket, i) => <TicketCard key={ticket.id} ticket={ticket} index={i} />) :
             <div><h3>The Queue is empty.</h3></div>}
         </Container>
     )
@@ -44,5 +58,8 @@ const Container = styled.div`
         h3 {
             margin-top: 20px;
         }
+    }
+    @media screen and (max-width: 1200px) {
+        width: 80%;
     }
 `

@@ -1,14 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeTicket } from '../state/actions/actions';
 import styled from "styled-components";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGreaterThan } from '@fortawesome/free-solid-svg-icons'
+import { faGreaterThan, faTimes, faExclamation } from '@fortawesome/free-solid-svg-icons'
 import axiosWithAuth from '../utils/axiosWithAuth';
 
-const TicketCard = ({ ticket }) => {
+const TicketCard = (props) => {
+    const [ticket, setTicket] = useState(props.ticket);
     const history = useHistory();
+    const dispatch = useDispatch();
     const containerDiv = useRef(null);
     const userId = useSelector(state => {
         if (state.userId > 0) {
@@ -30,9 +33,13 @@ const TicketCard = ({ ticket }) => {
             history.push('/login');
         }
     });
+    const teamLeads = useSelector(state => state.teamLeads);
     const [modal, setModal] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
     const [commentValue, setCommentValue] = useState("");
     const [comments, setComments] = useState(ticket.comments);
+    const [title, setTitle] = useState(ticket.title);
+    const [description, setDescription] = useState(ticket.description);
     let days = undefined;
     let hours = undefined;
     let minutes = undefined;
@@ -110,13 +117,30 @@ const TicketCard = ({ ticket }) => {
         setModal(!modal);
     }
 
+    const toggleDeleteModal = (e) => {
+        e.stopPropagation();
+        setDeleteModal(!deleteModal);
+    }
+
     const closeBtn = <button className="close" onClick={toggleModal}>&times;</button>;
 
     const handleChange = e => {
-        setCommentValue(e.target.value);
+        switch (e.target.name) {
+            case 'title':
+                setTitle(e.target.value);
+                break;
+            case 'description':
+                setDescription(e.target.value);
+                break;
+            case 'comment':
+                setCommentValue(e.target.value);
+                break;
+            default:
+                break;
+        }
     }
 
-    const handleSubmit = e => {
+    const handleCommentSubmit = e => {
         e.preventDefault();
         //make sure a comments was entered
         if (commentValue.trim() !== '') {
@@ -139,54 +163,189 @@ const TicketCard = ({ ticket }) => {
         }
     }
 
-    const displayTLBtn = role => {
+    const displayTLBtn = (role, isInModal) => {
         if (ticket.assignee === null && !ticket.resolved) {
-            return (
-                <button>Assign</button>
-            );
-        } else if (ticket.assignee === userId) {
+            if (role === 'section lead') {
+                return (
+                    <>
+                        <select name='team-lead' defaultValue='Assign' onClick={handleSelectClick} onChange={handleAssignChange}>
+                            <option disabled value='Assign'>Assign</option>
+                            <option value={userId}>Assign to me</option>
+                            {teamLeads.map(tl => {
+                                return <option key={tl.id} value={tl.id}>{tl.first_name} {tl.last_name}</option>
+                            })}
+                        </select>
+                    </>
+                );
+            } else {
+                return (
+                    <button className='assign' onClick={handleAssignClick}>Assign</button>
+                );
+            }
+            
+        } else if (ticket.assignee.id === Number(userId) && !ticket.resolved) {
             //style the button differently if the ticket is assigned
             //to the current user.
             return (
-                <button className="assigned-to-me">Assigned</button>
+                <button onClick={handleAssignClick} name='assigned-to-me' className="assigned-to-me">Assigned</button>
             );
         } else if (ticket.resolved) {
             //If the ticket is resolved
-            //disabled, can't click, cursor doesn't change
-            return (
-                <button className="resolved">Resolved</button>
-            );
+            if (isInModal) {
+                return <></>;
+            } else {
+                //disabled, can't click, cursor doesn't change
+                if (role === 'section lead' || ticket.asker.id === userId) {
+                    //if user is an sl or the user who created the ticket
+                    return (
+                        <button onClick={handleAssignClick} name='resolved' className="resolved">Resolved</button>
+                    );
+                } else {
+                    return (
+                        <button disabled className="resolved">Resolved</button>
+                    );
+                }
+            }
         } else {
             //ticket is assigned, but not to the user.
-            return (
-                <button className="assigned">Assigned</button>
-            );
+            if (role === 'section lead') {
+                return (
+                    <button onClick={handleAssignClick} name='unassign' className="assigned">
+                        Assigned
+                    </button>
+                );
+            } else {
+                return (
+                    <button disabled className="assigned">Assigned</button>
+                );
+            }
+        }
+    }
+
+    const handleSelectClick = e => {
+        e.stopPropagation();
+    }
+
+    const handleAssignClick = e => {
+        e.stopPropagation();
+        e.preventDefault();
+        let changes;
+        if (e.target.name === 'assigned-to-me' || e.target.name === 'unassign') {
+            //unassign myself or tl (if I'm a sl) from a ticket.
+            changes = {
+                being_solved: false,
+                assignee: null,
+                assigned_by: null
+            }
+        } else if (e.target.name === 'resolved') {
+            changes = {
+                resolved: false,
+                solved_by: null
+            }
+        } else if (e.target.name === 'mark-resolved') {
+            console.log('we made it to mark-resolved if statement');
+            if (ticket.resolved) {
+                changes = { resolved: false }
+            } else {
+                changes = { resolved: true }
+            }
+        } else {
+            //Assigns the ticket to the team lead that clicks on the Assign button.
+            changes = {
+                being_solved: true,
+                assignee: userId,
+                assigned_by: userId
+            }
+        }
+        axiosWithAuth()
+        .put(`api/tickets/${ticket.id}`, changes)
+        .then(res => {
+            setTicket(res.data);
+        })
+        .catch(err => console.log(err));
+    }
+
+    const handleAssignChange = e => {
+        const changes = {
+            being_solved: true,
+            assignee: e.target.value,
+            assigned_by: userId
+        }
+        axiosWithAuth()
+        .put(`api/tickets/${ticket.id}`, changes)
+        .then(res => {
+            setTicket(res.data);
+        })
+        .catch(err => console.log(err));
+    }
+
+    const isAskerAsigneeOrSL = () => {
+        if (ticket.asker.id === userId || (ticket.assignee && ticket.assignee.id === userId) || userRole === 'section lead') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    const deleteTicket = e => {
+        dispatch(removeTicket(ticket.id));
+        toggleDeleteModal(e);
+        if (e.target.name === 'modal-delete-btn') {
+            toggleModal(e);
+        }
+    }
+
+    const handleBlur = e => {
+        if (e.target.value.trim() === '') {
+            e.target.name === 'title' ? setTitle(ticket.title) : setDescription(ticket.description);
+        } else {
+            //send the changes to the database
+            axiosWithAuth()
+            .put(`api/tickets/${ticket.id}`, { [e.target.name]: e.target.value })
+            .then(res => {
+                //We don't need the update ticket info, since we're keeping
+                //track of state on the client-side.
+            })
+            .catch(err => {
+                console.log('Something went wrong when trying to make changes to the ticket in the database.\n', err);
+            })
+        }
+    }
+
+    const handleKeyDown = e => {
+        if (e.keyCode === 13) {
+            e.target.blur(); //triggers handleBlur
         }
     }
 
     return (
-        <Container ref={containerDiv} onClick={toggleModal} >
+        <Container ref={containerDiv} onClick={toggleModal} className={ticket.resolved ? 'resolved-ticket' : ''} >
             <span>
                 {calculateElapsedTime()}
                 <span>old</span>
             </span>
             <div>
                 <h3>{ticket.category} issue</h3>
-                <p>{ticket.title}</p>
+                <p>{title}</p>
             </div>
             <div className="imgBtnContainer">
-                {ticket.asker.image ? <img  src={ticket.asker.image} alt={`${ticket.asker.username}'s profile picture`} /> : <></> }
-                {(userRole === 'team lead' ? displayTLBtn(userRole) : <></>)}
-                {(userRole === 'section lead' ? displayTLBtn(userRole) : <></>)}
+                <button onClick={toggleDeleteModal} className='delete-btn'>
+                    <FontAwesomeIcon icon={faTimes} />
+                    <span className={props.index === 0 ? 'first-ticket' : ''}>Delete ticket?</span>
+                </button>
+                {ticket.asker.image ? <img  src={ticket.asker.image} alt={ticket.asker.username} /> : <></> }
+                {(userRole === 'team lead' || userRole === 'section lead') 
+                ? displayTLBtn(userRole, false) 
+                : <></>}
             </div>
             <Modal contentClassName='ticket-modal' isOpen={modal} toggle={toggleModal} backdrop={true} fade={false}>
                 <ModalHeader toggle={toggleModal} close={closeBtn}>
-                    <h2>{ticket.category} issue</h2>
-                    {ticket.title}
-                    </ModalHeader>
+                    {ticket.category} issue<br/>
+                    <input type="text" name="title" value={title} onChange={handleChange} onBlur={handleBlur} onKeyDown={handleKeyDown} />
+                </ModalHeader>
                 <ModalBody>
                     <h3>Description of issue</h3>
-                    <p>{ticket.description}</p>
+                    <textarea rows='4' name="description" onChange={handleChange} onBlur={handleBlur} onKeyDown={handleKeyDown} value={description} />
                 </ModalBody>
                 <ModalFooter>
                     <div className='comment-container'>
@@ -194,7 +353,7 @@ const TicketCard = ({ ticket }) => {
                         {ticket.comments.length > 0 ? comments.sort((a, b) => a.id - b.id).map(comment => {
                             return (
                                 <div key={comment.id} >
-                                    {comment.image ? <img  src={comment.image} alt={`${comment.username}'s profile picture`} /> : <></> }
+                                    {comment.image ? <img  src={comment.image} alt={comment.username} /> : <></> }
                                     <div>
                                         <p className='commenter-name'>
                                             {comment.first_name} {comment.last_name}
@@ -205,15 +364,37 @@ const TicketCard = ({ ticket }) => {
                             );
                         }) :
                         <div><p>Be the first to comment.</p></div>}
-                        <form onSubmit={handleSubmit}>
-                            <input placeholder='comment...' value={commentValue} onChange={handleChange} />
-                            <button type="button" onClick={handleSubmit} ><FontAwesomeIcon icon={faGreaterThan} /></button>
+                        <form onSubmit={handleCommentSubmit}>
+                            <input placeholder='comment...' name='comment' value={commentValue} onChange={handleChange} />
+                            <button type="button" onClick={handleCommentSubmit} ><FontAwesomeIcon icon={faGreaterThan} /></button>
                         </form>
                     </div>
                     <div className='footer-btn-container'>
-                        <Button color="primary" onClick={toggleModal}>Do Something</Button>{' '}
-                        <Button color="secondary" onClick={toggleModal}>Cancel</Button>
+                        <Button 
+                            disabled={isAskerAsigneeOrSL() ? false : ticket.resolved} 
+                            className={ticket.resolved ? 'resolved' : ''} 
+                            name='mark-resolved' color="primary" 
+                            onClick={handleAssignClick}
+                        >
+                            {ticket.resolved ? 'Resolved' : 'Mark as Resolved'}
+                        </Button>
+                        {' '}
+                        {displayTLBtn(userRole, true)}
+                        {' '}
+                        <Button name='modal-delete-btn' color="danger" onClick={toggleDeleteModal}>Delete</Button>
                     </div>
+                </ModalFooter>
+            </Modal>
+            <Modal className='delete-modal' isOpen={deleteModal} toggle={toggleDeleteModal}>
+                <ModalBody>
+                    <FontAwesomeIcon icon={faExclamation} />
+                    <h4>Are you sure you want to delete the ticket?</h4>
+                    <p>This cannot be undone!</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={deleteTicket} color="danger">Delete</Button>
+                    {' '}
+                    <Button color="secondary" onClick={toggleDeleteModal}>Cancel</Button>
                 </ModalFooter>
             </Modal>
         </Container>
@@ -229,6 +410,18 @@ const Container = styled.div`
     padding: 20px 0;
     cursor: pointer;
     border-radius: 8px;
+    &.resolved-ticket {
+        background-color: #efefef;
+        .resolved {
+            color: #656378;
+            border-color: #656378;
+            cursor: default;
+            &:hover {
+                background: transparent;
+                color: #656378;
+            }
+        }
+    }
     span {
         width: 18%;
         text-align: center;
@@ -271,8 +464,63 @@ const Container = styled.div`
     .imgBtnContainer {
         align-items: flex-end;
         justify-content: space-between;
+        .delete-btn {
+            color: #df0d0e;
+            font-weight: normal;
+            width: auto;
+            border: none;
+            font-size: 12px;
+            vertical-align: middle;
+            border-radius: 50%;
+            margin-top: -16px;
+            margin-bottom: 5px;
+            margin-right: -10px;
+            position: relative;
+            outline: none;
+            &:hover {
+                background: #df0d0e;
+                span {
+                    opacity: 1;
+                    transition: opacity 2s ease-in;
+                }
+            }
+            span {
+                opacity: 0;
+                width: 80px;
+                background-color: #c717c4;
+                color: #fff;
+                border-radius: 2px;
+                border: none;
+                text-align: center;
+                position: absolute;
+                z-index: 1;
+                bottom: 150%;
+                left: 50%;
+                margin-left: -40px;
+                font-size: 10px;
+                transition: opacity 0.3s;
+                &::after {
+                    content: "";
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    margin-left: -5px;
+                    border-width: 5px;
+                    border-style: solid;
+                    border-color: #c717c4 transparent transparent transparent;
+                }
+            }
+            .first-ticket {
+                bottom: -150%;
+                &::after {
+                    bottom: 100%;
+                    top: -100%;
+                    border-color: transparent transparent #2f2c49 transparent;
+                }
+            }
+        }
         button {
-            width: 80px;
+            width: 84px;
             margin-right: 10px;
             background: transparent;
             color: #0071eb;
@@ -282,7 +530,48 @@ const Container = styled.div`
             &:hover {
                 color: #fff;
                 background: #0071eb;
-
+            }
+            &.assigned-to-me {
+                color: #fff;
+                background: #0071eb; 
+            }
+            &.assigned {
+                color: #656378;
+                border-color: #656378;
+                cursor: default;
+                &:hover {
+                    background: transparent;
+                    color: #656378;
+                }
+            }
+        }
+        select {
+            width: 84px;
+            margin-right: 10px;
+            background: transparent;
+            color: #0071eb;
+            border: 2px solid #0071eb;
+            border-radius: 5px;
+            font-weight: bold;
+            outline: none;
+            padding: 2px 5px;
+            /* center select text */
+            text-align-last: center;
+            /* Remove arrow */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            &:hover {
+                color: #fff;
+                background: #0071eb;
+            }
+            option {
+                background: #fff;
+                color: #000;
+                text-align: center;
+                &:disabled {
+                    display: none;
+                }
             }
         }
     }
@@ -291,6 +580,27 @@ const Container = styled.div`
         .modal-footer {
             div {
                 margin-left: -100px;
+            }
+        }
+    }
+    @media screen and (max-width: 1200px) {
+        .imgBtnContainer .delete-btn {
+            span {
+                bottom: 25%;
+                left: -250%;
+                &::after {
+                    top: 20%;
+                    left: 106%;
+                    margin-left: -5px;
+                    border-color:  transparent  transparent transparent #c717c4;
+                }
+            }
+            .first-ticket {
+                bottom: 20%;
+                left: -250%;
+                &::after {
+                    display: none;
+                }
             }
         }
     }

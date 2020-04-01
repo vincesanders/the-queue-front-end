@@ -1,5 +1,6 @@
 import { 
     UPDATE_TICKETS,
+    UPDATE_TEAM_LEADS,
     UPDATE_COMMENTS,
     ADD_ERROR, 
     SORT_TICKETS_NEWEST, 
@@ -7,13 +8,18 @@ import {
     FILTER_OPEN_TICKETS,
     FILTER_CLOSED_TICKETS,
     FILTER_TICKETS_CATEGORY,
+    REMOVE_TICKET,
     SET_USER_ID,
-    SET_USER_ROLE } from '../actions/actions';
+    SET_USER_ROLE, 
+    SET_USER,
+    RESET_STATE } from '../actions/actions';
 
 const initialState = {
     userId: 0,
     userRole: 'none',
+    user: {},
     tickets: [],
+    teamLeads: [],
     errors: []
 }
 
@@ -29,12 +35,25 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 userRole: action.payload
             }
+        case SET_USER:
+            return {
+                ...state,
+                user: {
+                    ...action.payload
+                }
+            }
         case UPDATE_TICKETS:
             //payload is all tickets that will be displayed on ticket list.
             return {
                 ...state,
                 tickets: action.payload,
                 errors: []
+            };
+        case UPDATE_TEAM_LEADS:
+            return {
+                ...state,
+                errors: [],
+                teamLeads: action.payload
             };
         case UPDATE_COMMENTS:
             return {
@@ -82,7 +101,14 @@ const reducer = (state = initialState, action) => {
                 tickets: [
                     ...action.payload.tickets.filter(ticket => ticket.category === action.payload.category)
                 ]
-            }
+            };
+        case REMOVE_TICKET:
+            return {
+                ...state,
+                tickets: [
+                    ...state.tickets.filter(ticket => ticket.id !== action.payload)
+                ]
+            };
         case ADD_ERROR:
             return {
                 ...state,
@@ -90,6 +116,10 @@ const reducer = (state = initialState, action) => {
                     ...state.errors,
                     action.payload
                 ]
+            };
+        case RESET_STATE:
+            return {
+                ...initialState
             };
         default:
             return state;

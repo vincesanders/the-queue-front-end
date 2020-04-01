@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Sidebar from './Sidebar';
 import TicketList from './TicketList';
 import CreateTicket from './CreateTicket';
@@ -16,4 +16,7 @@ export default () => {
 
 const Container = styled.div`
     display: flex;
+    @media screen and (max-width: 1200px) {
+        flex-wrap: wrap;
+    }
 `
