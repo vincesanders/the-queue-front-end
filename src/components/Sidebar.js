@@ -450,5 +450,31 @@ const Container = styled.div`
     }
     @media screen and (max-width: 650px) {
         /* turns to a topbar. */
+        right: 0;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0;
+        a {
+            width: 100%;
+            margin: 10px auto 20px auto;
+            font-size: 1.6rem;
+        }
+        button, form {
+            display: none;
+        }
+        .selected {
+            border-left: none;
+            border-bottom: 8px solid rgba(71, 200, 232, 1);
+        }
+        .all-tickets-btn, .my-tickets-btn {
+            display: inline-block;
+            width: 50%;
+            text-align: center;
+            font-size: 1.2rem;
+        }
     }
 `
