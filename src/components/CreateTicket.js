@@ -264,4 +264,11 @@ const Container = styled.div`
       margin-bottom: 40px;
     }
   }
+  @media screen and (max-width: 650px) {
+    width: 100%;
+    margin-left: 0;
+    form {
+      padding: 20px;
+    }
+  }
 `

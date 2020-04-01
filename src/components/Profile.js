@@ -179,4 +179,26 @@ const Container = styled.div`
             }
         }
     }
+    @media screen and (max-width: 650px) {
+        height: auto;
+        position: absolute;
+        left: 70%;
+        top: 15%;
+        .profile-container {
+            flex-direction: row-reverse;
+            align-items: center;
+            width: auto;
+            a {
+                width: auto;
+                padding: 0;
+                margin: 0;
+                img {
+                    margin: 0 auto;
+                }
+            }
+            .logout-button {
+                display: inline-block;
+            }
+        }
+    }
 `

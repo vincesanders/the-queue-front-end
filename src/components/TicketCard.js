@@ -604,6 +604,23 @@ const Container = styled.div`
             }
         }
     }
+    @media screen and (max-width: 400px) {
+        div {
+            h3, p {
+                padding-left: 10px;
+            }
+        }
+        div:nth-child(2) {
+            width: 52%;
+            h3 {
+                font-size: 24px;
+                padding-bottom: 5px;
+            }
+        }
+        .imgBtnContainer {
+            width: 30%;
+        }
+    }
 `
     
 export default TicketCard;

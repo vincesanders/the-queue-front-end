@@ -340,3 +340,29 @@ code {
     top: 10%;
   }
 }
+
+@media screen and (max-width: 650px) {
+  .profile-modal, .image-modal, .delete-modal, .ticket-modal {
+    width: 80% !important;
+    margin: 0 auto 40px auto !important;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .modal-footer .footer-btn-container {
+    width: 100%;
+  }
+  .modal-footer .footer-btn-container button {
+    font-size: 0.8rem;
+    width: 30%;
+    padding: 2px;
+  }
+  .modal-footer .footer-btn-container select {
+    font-size: 0.8rem;
+    width: 30%;
+    padding: 2px;
+  }
+  .footer-btn-container select option {
+    font-size: 0.8rem;
+  }
+}
