@@ -168,4 +168,15 @@ const Container = styled.div`
             margin-left: 20px;
         }
     }
+    @media screen and (max-width: 800px) {
+        .profile-container {
+            margin: 0;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            .logout-button {
+                margin-left: 5px;
+            }
+        }
+    }
 `

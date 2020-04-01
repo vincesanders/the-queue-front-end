@@ -59,4 +59,7 @@ const Container = styled.div`
             margin-top: 20px;
         }
     }
+    @media screen and (max-width: 1200px) {
+        width: 80%;
+    }
 `

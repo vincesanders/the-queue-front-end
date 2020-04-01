@@ -387,4 +387,68 @@ const Container = styled.div`
             }
         }
     }
+    @media screen and (max-width: 1200px) {
+        a {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            padding-left: 20px;
+        }
+        .selected {
+            padding-left: 12px;
+        }
+        .all-tickets-btn, .my-tickets-btn {
+            font-size: 1.2rem;
+        }
+        button {
+            font-size: 1rem;
+            padding-left: 20px;
+        }
+        form {
+            width: 90%;
+            padding-left: 20px;
+            div {
+                margin-top: 8px;
+            }
+        }
+        .select, input, form select, div select, div button, div div button, form div input {
+            font-size: 0.8rem;
+        }
+        div select {
+            margin-left: 20px;
+        }
+    }
+    @media screen and (max-width: 800px) {
+        a {
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+            padding-left: 10px;
+        }
+        .selected {
+            padding-left: 2px;
+        }
+        .all-tickets-btn, .my-tickets-btn {
+            font-size: 0.8rem;
+        }
+        button {
+            font-size: 0.8rem;
+            padding-left: 10px;
+        }
+        form {
+            width: 92%;
+            padding-left: 10px;
+            div {
+                margin-top: 6px;
+            }
+        }
+        .select, input, form select, div select, div button, div div button, form div input {
+            font-size: 0.8rem;
+        }
+        div select {
+            margin-left: 10px;
+            width: 80%;
+        }
+    }
+    @media screen and (max-width: 650px) {
+        /* turns to a topbar. */
+    }
 `

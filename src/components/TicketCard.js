@@ -583,6 +583,27 @@ const Container = styled.div`
             }
         }
     }
+    @media screen and (max-width: 1200px) {
+        .imgBtnContainer .delete-btn {
+            span {
+                bottom: 25%;
+                left: -250%;
+                &::after {
+                    top: 20%;
+                    left: 106%;
+                    margin-left: -5px;
+                    border-color:  transparent  transparent transparent #c717c4;
+                }
+            }
+            .first-ticket {
+                bottom: 20%;
+                left: -250%;
+                &::after {
+                    display: none;
+                }
+            }
+        }
+    }
 `
     
 export default TicketCard;
