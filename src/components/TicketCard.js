@@ -620,6 +620,9 @@ const Container = styled.div`
         .imgBtnContainer {
             width: 30%;
         }
+        button {
+            padding: 2px 5px;
+        }
     }
 `
     
