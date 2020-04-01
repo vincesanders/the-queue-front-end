@@ -13,6 +13,8 @@ import axiosWithAuth from '../../utils/axiosWithAuth';
 export const SET_USER_ID = "SET_USER_ID";
 export const SET_USER_ROLE = "SET_USER_ROLE";
 export const SET_USER = "SET_USER";
+export const TOGGLE_LOADING = "TOGGLE_LOADING";
+export const SET_LOADING = "SET_LOADING";
 export const UPDATE_TICKETS = "UPDATE_TICKETS";
 export const UPDATE_TEAM_LEADS = "UPDATE_TEAM_LEADS";
 export const UPDATE_COMMENTS = "UPDATE_COMMENTS";
@@ -37,6 +39,14 @@ export const setUser = user => dispatch => {
     setUserId(user.id);
     setUserRole(user.role);
     dispatch({ type: SET_USER, payload: user });
+}
+
+export const toggleLoading = () => dispatch => {
+    dispatch({ type: TOGGLE_LOADING });
+}
+
+export const setLoading = boolean => dispatch => {
+    dispatch({ type: SET_LOADING, payload: boolean});
 }
 
 export const getAllTicketsByNewest = () => dispatch => {

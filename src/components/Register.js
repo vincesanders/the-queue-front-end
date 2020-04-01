@@ -1,13 +1,14 @@
 import React from "react";
 import { useHistory, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import axiosWithAuth from '../utils/axiosWithAuth';
 import styled from "styled-components";
-import { setUser } from "../state/actions/actions";
+import { setUser, setLoading } from "../state/actions/actions";
+import LoadingSpinner from './LoadingSpinner';
 
 const schema = yup.object().shape({
   first_name: yup.string().trim().required('First name is required.'),
@@ -21,12 +22,14 @@ const schema = yup.object().shape({
 export default function Register(props) {
   const history = useHistory();
   const dispatch = useDispatch();
+  const isLoading = useSelector(state => state.isLoading);
   const { register, handleSubmit, errors, formState } = useForm({
     mode: "onChange",
     validationSchema: schema
   });
 
   const handleRegister = (data) => {
+    dispatch(setLoading(true));
     axiosWithAuth()
     .post('api/auth/register', data)
     .then(res => {
@@ -67,6 +70,7 @@ export default function Register(props) {
 
   return(
     <Container>
+    {isLoading ? <LoadingSpinner /> : <></>}
     <form onSubmit={handleSubmit(handleRegister)}>
       <h1>We're here to help.</h1>
       <p>Create a help ticket and we'll connect you with a Lambda School Team Lead.</p>

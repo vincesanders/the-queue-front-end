@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllTicketsByNewest, getallTeamLeads } from '../state/actions/actions';
+import { getAllTicketsByNewest, getallTeamLeads, setLoading } from '../state/actions/actions';
 import TicketCard from '../components/TicketCard';
 import styled from 'styled-components';
 
@@ -29,6 +29,7 @@ const TicketList = () => {
         if(userRole === 'section lead') {
             dispatch(getallTeamLeads());
         }
+        dispatch(setLoading(false));
     },[]);
 
     if (errors.length > 0) {
