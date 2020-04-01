@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setUserId, setUserRole } from '../state/actions/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser, setLoading } from '../state/actions/actions';
 import axiosWithAuth from '../utils/axiosWithAuth';
 import { useForm } from "react-hook-form";
 import * as yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import styled from "styled-components";
+import LoadingSpinner from './LoadingSpinner';
 
 const schema = yup.object().shape({
   username: yup.string().trim().required('Username is required.'),
@@ -17,21 +18,21 @@ const schema = yup.object().shape({
 export default function Login(props) {
     const history = useHistory();
     const dispatch = useDispatch();
+    const isLoading = useSelector(state => state.isLoading);
     const { register, handleSubmit, errors, formState } = useForm({
-      mode: "onChange",
-      validationSchema: schema
+        mode: "onChange",
+        validationSchema: schema
     });
-    const [ user, setUser ] = useState({});
   
     const handleLogin = (data) => {
+        dispatch(setLoading(true));
         axiosWithAuth()
             .post('api/auth/login', data)
             .then(res => {
-              setUser(res.data.user);
               localStorage.setItem('user', res.data.user.id);
               localStorage.setItem('role', res.data.user.role);
-              dispatch(setUserId(res.data.user.id));
-              dispatch(setUserRole(res.data.user.role));
+              localStorage.setItem('profile', JSON.stringify(res.data.user));
+              dispatch(setUser(res.data.user));
               localStorage.setItem('token', res.data.token);
               history.push('/protected');
             })
@@ -45,14 +46,15 @@ export default function Login(props) {
         borderBottomWidth: 4
     };
     if (errors.username) {
-      usernameStyle = errorBorder;
+        usernameStyle = errorBorder;
     }
     if (errors.password) {
-      passwordStyle = errorBorder;
+        passwordStyle = errorBorder;
     }
 
   return (
     <Container>
+      {isLoading ? <LoadingSpinner /> : <></>}
       <form onSubmit={handleSubmit(handleLogin)}>
         <h1>We're here to help.</h1>
         <p>Create a help ticket and we'll connect you with a Lambda School Team Lead.</p>

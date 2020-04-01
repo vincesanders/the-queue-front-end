@@ -20,6 +20,25 @@ code {
   top: 25%;
 }
 
+.delete-modal {
+  margin: 0 auto !important;
+  top: 10%;
+}
+
+.delete-modal svg {
+  color: #df0d0e;
+  font-size: 60px;
+  margin-bottom: 30px;
+}
+
+.delete-modal .modal-body {
+  text-align: center;
+}
+
+.delete-modal .modal-footer {
+  flex-direction: row;
+}
+
 .comment-container {
   margin-left: -100px;
 }
@@ -58,7 +77,9 @@ code {
   border-radius: 50%;
   height: 24px;
   width: 24px;
+  min-width: 24px;
   margin-right: 10px;
+  object-fit: cover;
 }
 
 .commenter-name {
@@ -107,6 +128,191 @@ code {
   border-radius: 4px;
 }
 
+.footer-btn-container button.resolved {
+  color: #656378;
+  border-color: #656378;
+  cursor: default;
+  background: transparent;
+}
+
+.footer-btn-container button.assign {
+  background: transparent;
+  color: #0071eb;
+  border: 2px solid #0071eb;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.footer-btn-container button.assign:hover {
+  color: #fff;
+  background: #0071eb;
+}
+
+.footer-btn-container button.assigned-to-me {
+  color: #fff;
+  background: #0071eb; 
+}
+
+.footer-btn-container button.assigned {
+  color: #656378;
+  background: transparent;
+  border-color: #656378;
+  cursor: default;
+}
+
+.footer-btn-container button.assigned:hover {
+  background: transparent;
+  color: #656378;
+}
+
+.footer-btn-container select {
+  /* width: 84px; */
+  margin-right: 10px;
+  background: transparent;
+  color: #0071eb;
+  border: 2px solid #0071eb;
+  border-radius: 5px;
+  font-weight: bold;
+  outline: none;
+  padding: 2px 5px;
+  /* center select text */
+  text-align-last: center;
+  /* Remove arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.footer-btn-container select:hover {
+  color: #fff;
+  background: #0071eb;
+}
+
+.footer-btn-container select option {
+  background: #fff;
+  color: #000;
+  text-align: center;
+}
+
+.footer-btn-container select option:disabled {
+  display: none;
+}
+
+.modal-title {
+  font-size: 36px;
+  width: 100%;
+}
+.modal-title input {
+  font-size: 20px;
+  width: 107%;
+  border: none;
+  outline: none;
+}
+
+.modal-title input:focus {
+  border-bottom: 4px solid #47c8e8;
+}
+
+.modal-body textarea {
+  width: 100%;
+  border: none;
+  resize: none;
+  border-bottom: 4px solid transparent;
+  outline: none;
+}
+
+.modal-body textarea:focus {
+  border-bottom-color: #47c8e8;
+}
+
+.profile-modal {
+  margin: 0 auto !important;
+  top: 10%;
+}
+
+.profile-modal .profile-img {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.profile-modal a {
+  margin: 20px auto;
+  cursor: pointer;
+}
+
+.profile-modal img {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+}
+
+.profile-modal .modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-modal .name-input {
+  width: 100%;
+  font-size: 30px;
+  text-align: left;
+}
+
+.profile-modal input {
+  width: 280px;
+  text-align: center;
+  border: none;
+  border-bottom: 4px solid transparent;
+  outline: none;
+}
+
+.profile-modal input:focus {
+  border-bottom-color: #47c8e8;
+}
+
+.profile-modal .modal-body p {
+  margin: 0;
+  font-size: 14px;
+  cursor: default;
+}
+
+.image-modal {
+  margin: 0 auto !important;
+  top: 10%;
+}
+
+.image-modal .modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-modal label {
+  text-align: left;
+  width: 100%;
+}
+
+.image-modal input {
+  width: 100%;
+  padding: 6px;
+  border-radius: 8px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  background-color: #e0e0e0;
+}
+
+.image-modal input:focus {
+  outline: none;
+  border: 4px solid #c717c4;
+}
+
+.image-modal img {
+  border-radius: 50%;
+  height: 240px;
+  height: 240px;
+  margin: 40px auto;
+}
+
 @keyframes pulse {
 	50% {
 		opacity: 0.3;
@@ -126,4 +332,37 @@ code {
 		width: 80px;
 		height: 80px;
 	}
+}
+
+@media screen and (max-width: 1200px) {
+  .modal-dialog {
+    margin: 0 auto 40px auto !important;
+    top: 10%;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .profile-modal, .image-modal, .delete-modal, .ticket-modal {
+    width: 80% !important;
+    margin: 0 auto 40px auto !important;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .modal-footer .footer-btn-container {
+    width: 100%;
+  }
+  .modal-footer .footer-btn-container button {
+    font-size: 0.8rem;
+    width: 30%;
+    padding: 2px;
+  }
+  .modal-footer .footer-btn-container select {
+    font-size: 0.8rem;
+    width: 30%;
+    padding: 2px;
+  }
+  .footer-btn-container select option {
+    font-size: 0.8rem;
+  }
 }
