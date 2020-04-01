@@ -34,7 +34,6 @@ export const setUserRole = role => dispatch => {
 }
 
 export const setUser = user => dispatch => {
-    console.log('user in setUser action: ', user);
     setUserId(user.id);
     setUserRole(user.role);
     dispatch({ type: SET_USER, payload: user });

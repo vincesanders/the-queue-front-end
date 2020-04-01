@@ -253,6 +253,7 @@ const Container = styled.div`
     flex-direction: column;
     align-items: flex-start;
     height: 100%;
+    min-height: 580px;
     width: 20%;
     position: fixed;
     z-index: 1;
