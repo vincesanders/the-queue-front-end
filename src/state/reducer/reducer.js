@@ -12,11 +12,14 @@ import {
     SET_USER_ID,
     SET_USER_ROLE, 
     SET_USER,
+    TOGGLE_LOADING,
+    SET_LOADING,
     RESET_STATE } from '../actions/actions';
 
 const initialState = {
     userId: 0,
     userRole: 'none',
+    isLoading: false,
     user: {},
     tickets: [],
     teamLeads: [],
@@ -41,6 +44,16 @@ const reducer = (state = initialState, action) => {
                 user: {
                     ...action.payload
                 }
+            }
+        case TOGGLE_LOADING:
+            return {
+                ...state,
+                isLoading: !state.isLoading
+            }
+        case SET_LOADING:
+            return {
+                ...state,
+                isLoading: action.payload
             }
         case UPDATE_TICKETS:
             //payload is all tickets that will be displayed on ticket list.
