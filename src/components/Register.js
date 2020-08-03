@@ -27,7 +27,7 @@ export default function Register(props) {
     mode: "onChange",
     validationSchema: schema
   });
-
+  
   const handleRegister = (data) => {
     dispatch(setLoading(true));
     axiosWithAuth()

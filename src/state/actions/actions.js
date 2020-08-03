@@ -1,15 +1,5 @@
 import axiosWithAuth from '../../utils/axiosWithAuth';
-/*
- * get all open tickets
- * get all tickets associated with the user
- * get all closed tickets
- * get filtered tickets by category (maybe same as closed)
- * sort current tickets by newest (local state?)
- * sort current tickets by oldest (local state?)
- * search tickets by title or description
- * Add a comment to a ticket
- * submit a ticket
- */
+
 export const SET_USER_ID = "SET_USER_ID";
 export const SET_USER_ROLE = "SET_USER_ROLE";
 export const SET_USER = "SET_USER";
@@ -154,23 +144,6 @@ export const sortTicketsNewest = () => dispatch => {
 export const sortTicketsOldest = () => dispatch => {
     dispatch({ type: SORT_TICKETS_OLDEST });
 }
-
-//Didn't update state
-// export const addComment = comment => dispatch => {
-//     console.log('this is comment insided of addComent in actions: ', comment);
-//     axiosWithAuth()
-//     .post(`api/tickets/${comment.ticket_id}/comments`, comment)
-//     .then(res => {
-//         //get the comment info for ticket
-//         dispatch({ 
-//             type: UPDATE_COMMENTS, 
-//             payload: { ticket_id: comment.ticket_id, comment: res.data }
-//         });
-//     })
-//     .catch(err => {
-//         console.log('Error: ', err);
-//     });
-// }
 
 export const removeTicket = ticketId => dispatch => {
     console.log('this is ticketId in removeTicket action: ', ticketId);
