@@ -1,4 +1,5 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## About The Queue
+The Queue is a ticket and issue tracking application. Students at Lambda School need a place where they can escalate their concerns and receive help. This application allows section leads and team leads to manage help desk tickets that come in from students. All users can submit a help desk ticket and categorize it. All users can also post helpful advice to tickets in the form of a comment. Section leads can assign themselves or a team lead to a ticket. Team leads can also assign themselves to a ticket.
 
 ## Available Scripts
 

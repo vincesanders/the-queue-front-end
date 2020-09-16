@@ -7,6 +7,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
       <Route
         {...rest}
         render={props => {
+          //decode and validate token
           if (localStorage.getItem("token")) {
             return <Component {...props} />;
           }
